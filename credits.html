@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits - FlexZone</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .static-page { max-width: 800px; margin: 0 auto; padding: 40px 24px; text-align: center; }
+        .static-page h1 { font-size: 2.5rem; margin-bottom: 8px; color: var(--primary-color); }
+        .static-page h2 { font-size: 1.5rem; margin-bottom: 16px; color: var(--text-color); }
+        .static-page p { margin-bottom: 12px; color: var(--secondary-text); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 32px; color: var(--accent-color); font-weight: 500; text-decoration: none; float: left;}
+        .back-link:hover { text-decoration: underline; }
+        .main-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="static-page">
+        <div style="width: 100%; overflow: hidden;">
+             <a href="pages/home.php" class="back-link"><i class='bx bx-arrow-back'></i> Back to App</a>
+        </div>
+        <h1>About FlexZone</h1>
+        <p style="margin-bottom: 40px;">Version 1.2.0</p>
+        <div class="main-card">
+            <h2>Project Info</h2>
+            <p>Developed as a comprehensive fitness tracking solution.</p>
+            <p style="margin-top: 16px;"><strong>Tech Stack:</strong> HTML5, CSS3, JavaScript, PHP, MySQL</p>
+        </div>
+        <div class="main-card">
+            <h2>Credits</h2>
+            <p><strong>Design & Dev:</strong> FlexZone Team</p>
+            <p><strong>Icons:</strong> Boxicons</p>
+            <p><strong>Charts:</strong> Chart.js</p>
+            <p><strong>Fonts:</strong> Google Fonts (Poppins)</p>
+        </div>
+        <p style="margin-top: 60px; font-size: 0.9rem;">&copy; 2025 FlexZone</p>
+    </div>
+    <script src="js/theme.js"></script>
+</body>
+</html>

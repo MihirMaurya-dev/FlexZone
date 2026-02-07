@@ -1,0 +1,17 @@
+AddDefaultCharset UTF-8
+
+<FilesMatch "\.(html|php)$">
+    Header set Content-Type "text/html; charset=UTF-8"
+</FilesMatch>
+
+<FilesMatch "\.js$">
+    Header set Content-Type "application/javascript; charset=UTF-8"
+</FilesMatch>
+
+<FilesMatch "\.css$">
+    Header set Content-Type "text/css; charset=UTF-8"
+</FilesMatch>
+
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Header set Content-Type "image/jpeg"
+</FilesMatch>

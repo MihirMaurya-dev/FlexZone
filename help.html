@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - FlexZone</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .static-page { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+        .static-page h1 { font-size: 2.5rem; margin-bottom: 24px; color: var(--primary-color); }
+        .static-page h2 { font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--text-color); }
+        .static-page p { margin-bottom: 16px; color: var(--secondary-text); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 32px; color: var(--accent-color); font-weight: 500; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .main-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+        details summary { list-style: none; }
+        details summary::-webkit-details-marker { display: none; }
+        details[open] summary { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="static-page">
+        <a href="pages/home.php" class="back-link"><i class='bx bx-arrow-back'></i> Back to App</a>
+        <h1>Help & Documentation</h1>
+        <div class="main-card">
+            <h2>Getting Started</h2>
+            <p><strong>1. Start a Workout:</strong> Go to the Home screen and select a preset (Beginner, Intermediate) or build a Custom plan.</p>
+            <p><strong>2. Track Progress:</strong> Use the "Progress" tab (Body icon) to log weight and measurements.</p>
+            <p><strong>3. Streaks:</strong> Consistency is key! Workout daily to build your streak.</p>
+        </div>
+        <div class="main-card">
+            <h2>FAQ</h2>
+            <details style="margin-bottom: 16px;">
+                <summary style="cursor: pointer; font-weight: 600; color: var(--text-color); display: flex; align-items: center; justify-content: space-between;">
+                    How is calorie burn calculated? <i class='bx bx-chevron-down'></i>
+                </summary>
+                <p style="margin-top: 8px;">We use MET values (Metabolic Equivalent of Task) multiplied by your body weight and duration.</p>
+            </details>
+            <details>
+                <summary style="cursor: pointer; font-weight: 600; color: var(--text-color); display: flex; align-items: center; justify-content: space-between;">
+                    Can I use this offline? <i class='bx bx-chevron-down'></i>
+                </summary>
+                <p style="margin-top: 8px;">Currently, FlexZone requires an internet connection to save your progress.</p>
+            </details>
+        </div>
+        <div class="main-card">
+            <h2>Contact Us</h2>
+            <form onsubmit="event.preventDefault(); window.showMessage('Message sent!', 'success'); this.reset();">
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-color);">Message</label>
+                    <textarea rows="4" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--body-bg); color: var(--text-color); font-family: inherit;"></textarea>
+                </div>
+                <button type="submit" style="background-color: var(--primary-color); color: white; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; font-weight: 500;">Send Message</button>
+            </form>
+        </div>
+    </div>
+    <script src="js/theme.js"></script>
+</body>
+</html>

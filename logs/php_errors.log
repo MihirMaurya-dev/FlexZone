@@ -1,0 +1,151 @@
+[18-Dec-2025 16:09:08 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[18-Dec-2025 16:09:46 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[18-Dec-2025 16:17:04 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[18-Dec-2025 16:20:38 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[18-Dec-2025 16:21:04 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[18-Dec-2025 16:23:26 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[19-Dec-2025 07:17:41 Europe/Berlin] Update profile error: Unknown column 'updated_at' in 'field list'
+[19-Dec-2025 07:20:04 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 07:20:22 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 07:25:19 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:25:19 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:25:19 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:25:19 Europe/Berlin] No exercises found for workout type: custom
+[19-Dec-2025 07:25:35 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:25:35 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:25:35 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:25:35 Europe/Berlin] No exercises found for workout type: intermediate
+[19-Dec-2025 07:30:33 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:30:33 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:30:33 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:30:33 Europe/Berlin] No exercises found for workout type: advanced
+[19-Dec-2025 07:56:42 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:56:42 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:56:42 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:56:42 Europe/Berlin] No exercises found for workout type: advanced
+[19-Dec-2025 07:56:54 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:56:54 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:56:54 Europe/Berlin] Error in getExercises: Unknown column 'type' in 'field list'
+[19-Dec-2025 07:56:54 Europe/Berlin] No exercises found for workout type: custom
+[19-Dec-2025 09:46:13 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 10:17:45 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 10:17:54 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 10:30:22 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 10:30:45 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 10:31:07 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[19-Dec-2025 11:06:02 Europe/Berlin] Get weight history error: Unknown column 'created_at' in 'field list'
+[23-Dec-2025 06:29:11 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:29:23 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:29:49 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:29:54 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:30:11 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:30:18 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:30:24 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:30:25 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:30:29 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:30:35 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:32:30 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:32:33 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:36:51 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:36:54 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:36:59 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:37:06 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 06:40:43 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[23-Dec-2025 06:40:54 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[23-Dec-2025 06:59:35 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 06:59:35 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 06:59:35 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 06:59:35 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 06:59:35 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 06:59:35 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 07:16:58 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[23-Dec-2025 07:37:38 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 07:37:38 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 07:37:38 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 27
+[23-Dec-2025 07:37:38 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 119
+[23-Dec-2025 07:37:38 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 119
+[23-Dec-2025 07:37:38 Europe/Berlin] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\FlexZone\php\db_connection.php on line 119
+[23-Dec-2025 11:10:14 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:20:58 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:24:15 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:28:26 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:29:08 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:29:12 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:29:29 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:30:56 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:36:42 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[23-Dec-2025 11:38:42 Europe/Berlin] Get full profile error: Table 'flexzone.badges' doesn't exist
+[24-Dec-2025 11:18:34 Europe/Berlin] PHP Warning:  Undefined array key "notes" in C:\xampp\htdocs\FlexZone\php\save_progress.php on line 18
+[24-Dec-2025 16:40:14 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_user_stats.php on line 14
+[24-Dec-2025 16:40:14 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_workout_history.php on line 14
+[24-Dec-2025 16:40:14 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 16:40:44 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_user_stats.php on line 14
+[24-Dec-2025 16:40:44 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 16:40:45 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_user_stats.php on line 14
+[24-Dec-2025 16:40:45 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 16:40:47 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_user_stats.php on line 14
+[24-Dec-2025 16:40:47 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 16:40:49 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_user_stats.php on line 14
+[24-Dec-2025 16:40:49 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 16:40:50 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 16:40:52 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_profile.php on line 14
+[24-Dec-2025 17:37:33 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:33 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\FlexZone\php\get_progress.php:11
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:36 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:36 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\FlexZone\php\get_progress.php:11
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:39 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:39 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\FlexZone\php\get_progress.php:11
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:40 Europe/Berlin] PHP Warning:  Undefined variable $conn in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[24-Dec-2025 17:37:40 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\FlexZone\php\get_progress.php:11
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\php\get_progress.php on line 11
+[30-Dec-2025 11:01:02 Europe/Berlin] PHP Warning:  Constant FLEXZONE_APP already defined in C:\xampp\htdocs\FlexZone\index.php on line 17
+[30-Dec-2025 11:01:19 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[30-Dec-2025 11:01:59 Europe/Berlin] PHP Warning:  move_uploaded_file(../../assets/progress_photos/1_2025-12-30_front.png): Failed to open stream: No such file or directory in C:\xampp\htdocs\FlexZone\php\api\user\save_progress.php on line 48
+[30-Dec-2025 11:01:59 Europe/Berlin] PHP Warning:  move_uploaded_file(): Unable to move &quot;C:\xampp\tmp\php4119.tmp&quot; to &quot;../../assets/progress_photos/1_2025-12-30_front.png&quot; in C:\xampp\htdocs\FlexZone\php\api\user\save_progress.php on line 48
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Warning:  Undefined variable $activePage in C:\xampp\htdocs\FlexZone\includes\head.php on line 33
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Warning:  Undefined variable $activePage in C:\xampp\htdocs\FlexZone\includes\head.php on line 36
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Warning:  Undefined variable $activePage in C:\xampp\htdocs\FlexZone\includes\head.php on line 38
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Warning:  Undefined variable $activePage in C:\xampp\htdocs\FlexZone\includes\head.php on line 40
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Warning:  Undefined variable $activePage in C:\xampp\htdocs\FlexZone\includes\head.php on line 45
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Warning:  Undefined variable $activePage in C:\xampp\htdocs\FlexZone\includes\head.php on line 45
+[17-Jan-2026 11:08:12 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function url() in C:\xampp\htdocs\FlexZone\includes\navbar.php:3
+Stack trace:
+#0 C:\xampp\htdocs\FlexZone\pages\leaderboard.php(37): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3
+[17-Jan-2026 11:11:49 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function url() in C:\xampp\htdocs\FlexZone\includes\navbar.php:3
+Stack trace:
+#0 C:\xampp\htdocs\FlexZone\pages\leaderboard.php(37): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3
+[17-Jan-2026 11:11:50 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function url() in C:\xampp\htdocs\FlexZone\includes\navbar.php:3
+Stack trace:
+#0 C:\xampp\htdocs\FlexZone\pages\leaderboard.php(37): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3
+[17-Jan-2026 11:11:51 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function url() in C:\xampp\htdocs\FlexZone\includes\navbar.php:3
+Stack trace:
+#0 C:\xampp\htdocs\FlexZone\pages\leaderboard.php(37): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3
+[17-Jan-2026 11:11:51 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function url() in C:\xampp\htdocs\FlexZone\includes\navbar.php:3
+Stack trace:
+#0 C:\xampp\htdocs\FlexZone\pages\leaderboard.php(37): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3
+[17-Jan-2026 11:13:36 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function url() in C:\xampp\htdocs\FlexZone\includes\navbar.php:3
+Stack trace:
+#0 C:\xampp\htdocs\FlexZone\pages\progress.php(106): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3

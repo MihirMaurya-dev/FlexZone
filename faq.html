@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - FlexZone</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .static-page { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+        .static-page h1 { font-size: 2.5rem; margin-bottom: 24px; color: var(--primary-color); }
+        .back-link { display: inline-block; margin-bottom: 32px; color: var(--accent-color); font-weight: 500; }
+        .faq-item { margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 24px; }
+        .faq-question { font-size: 1.2rem; font-weight: 600; color: var(--text-color); margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-answer { color: var(--secondary-text); line-height: 1.6; display: none; }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-icon { transition: transform 0.3s; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+    <div class="static-page">
+        <a href="index.php" class="back-link">&larr; Back to Home</a>
+        <h1>Frequently Asked Questions</h1>
+        <div class="faq-item">
+            <div class="faq-question">Is FlexZone free to use? <span class="faq-icon">▼</span></div>
+            <div class="faq-answer">Yes! FlexZone allows you to track your workouts, view history, and use basic features for free.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">How do I create a custom workout? <span class="faq-icon">▼</span></div>
+            <div class="faq-answer">Navigate to the Home page and select "Custom" from the Quick Actions menu. You can then specify muscle groups, duration, and equipment.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Can I export my data? <span class="faq-icon">▼</span></div>
+            <div class="faq-answer">Yes, go to your Profile page, scroll to the Settings section, and click "Export Workout History" to download a CSV file of your logs.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">How do I change my profile picture? <span class="faq-icon">▼</span></div>
+            <div class="faq-answer">On your Profile page, click the camera icon next to your avatar to upload a new photo.</div>
+        </div>
+    </div>
+    <script src="js/theme.js"></script>
+    <script>
+        document.querySelectorAll('.faq-question').forEach(item => {
+            item.addEventListener('click', () => {
+                const parent = item.parentElement;
+                parent.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
