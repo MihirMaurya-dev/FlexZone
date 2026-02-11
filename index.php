@@ -50,7 +50,7 @@ require_once 'includes/head.php';
     </section>
     <section id="about" class="about" style="padding: 40px 24px; max-width: 800px; margin: 0 auto; text-align: center;">
         <div class="about-img" style="margin-bottom: 24px;">
-            <img src="assets/about.jpg" alt="Fitness motivation" style="width: 100%; border-radius: 24px; box-shadow: var(--shadow);">
+            <img src="assets/about.png" alt="Fitness motivation" style="width: 100%; border-radius: 24px; box-shadow: var(--shadow);">
         </div>
         <div class="about-content">
             <h2 style="margin-bottom: 16px;">Why Us?</h2>

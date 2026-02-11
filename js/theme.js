@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!container) {
             container = document.createElement('div');
             container.id = 'global-message-container';
-            container.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; pointer-events: none;';
+            container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; width: 90%; max-width: 350px; pointer-events: none; display: flex; flex-direction: column; align-items: flex-end;';
             document.body.appendChild(container);
         }
 
