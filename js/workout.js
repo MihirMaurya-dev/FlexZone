@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
       addRestBtn: document.getElementById('add-rest-btn')
     }
   };
+  
   let state = {
     executionPlan: [],
     currentStepIndex: 0,
@@ -30,99 +31,71 @@ document.addEventListener('DOMContentLoaded', function() {
     userWeightKg: 70,
     workoutType: 'beginner'
   };
+
   async function init() {
     bindEventListeners();
     try {
-      await fetchUserWeight();
-      await fetchWorkoutPlan();
-      loadStep();
+      const profile = await window.apiFetch('../php/api/user/get_profile.php');
+      if (profile.status === 'success' && profile.profile.weight_kg > 0) state.userWeightKg = parseFloat(profile.profile.weight_kg);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      state.workoutType = urlParams.get('type') || 'beginner';
+      let fetchUrl = `../php/api/workouts/generate_workout.php?type=${encodeURIComponent(state.workoutType)}`;
+      ['muscle', 'duration', 'equipment'].forEach(p => { if (urlParams.get(p)) fetchUrl += `&${p}=${encodeURIComponent(urlParams.get(p))}`; });
+
+      const data = await window.apiFetch(fetchUrl);
+      if (data?.status === 'success' && data.workout?.length > 0) {
+        state.executionPlan = [];
+        data.workout.forEach((ex, i) => {
+          state.executionPlan.push(ex);
+          if (i < data.workout.length - 1) state.executionPlan.push({ type: 'rest', duration_seconds: 30 });
+        });
+        loadStep();
+      } else throw new Error(data.message || "No exercises found.");
     } catch (error) {
-      console.error("Initialization failed:", error);
-      handleWorkoutError(
-        "Unable to load workout plan. Please check your connection and try again.<br>" +
-        `<button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 15px;">Retry</button>`
-      );
+      handleWorkoutError("Unable to load workout plan. Please try again.<br><button onclick='window.location.reload()' class='btn btn-primary' style='margin-top: 15px;'>Retry</button>");
     }
   }
-  async function fetchUserWeight() {
-    try {
-      const response = await fetch('../php/api/user/get_profile.php');
-      const data = await response.json();
-      if (data.status === 'success' && data.profile.weight_kg > 0) {
-        state.userWeightKg = parseFloat(data.profile.weight_kg);
-      } else {
-        console.warn('User weight not available, using default for calorie calculation.');
-      }
-    } catch (error) {
-      console.error("Error fetching user weight, using default.", error);
-    }
-  }
-  async function fetchWorkoutPlan() {
-    const urlParams = new URLSearchParams(window.location.search);
-    state.workoutType = urlParams.get('type') || 'beginner';
-    let fetchUrl = `../php/api/workouts/generate_workout.php?type=${encodeURIComponent(state.workoutType)}`;
-    if (urlParams.get('muscle')) fetchUrl += `&muscle=${encodeURIComponent(urlParams.get('muscle'))}`;
-    if (urlParams.get('duration')) fetchUrl += `&duration=${encodeURIComponent(urlParams.get('duration'))}`;
-    if (urlParams.get('equipment')) fetchUrl += `&equipment=${encodeURIComponent(urlParams.get('equipment'))}`;
-    const response = await fetch(fetchUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data && data.status === 'success' && data.workout && data.workout.length > 0) {
-      state.executionPlan = [];
-      data.workout.forEach((exercise, index) => {
-        state.executionPlan.push(exercise);
-        if (index < data.workout.length - 1) {
-          state.executionPlan.push({ type: 'rest', duration_seconds: 30 });
-        }
-      });
-    } else {
-      throw new Error(data.message || "No exercises found for this workout plan.");
-    }
-  }
+
   function loadStep() {
-    if (state.currentStepIndex >= state.executionPlan.length) {
-      return finishWorkout();
-    }
+    if (state.currentStepIndex >= state.executionPlan.length) return finishWorkout();
     if (state.currentStepIndex < 0) state.currentStepIndex = 0;
+    
     clearInterval(state.timerInterval);
     state.isPaused = false;
     UIElements.nav.pauseBtn.textContent = 'Pause';
+    
     const step = state.executionPlan[state.currentStepIndex];
-    if (step.type === 'rest') {
-      loadRestStep(step);
-    } else {
-      loadExerciseStep(step);
-    }
+    step.type === 'rest' ? loadRestStep(step) : loadExerciseStep(step);
+    
     UIElements.nav.prevBtn.disabled = (state.currentStepIndex === 0);
     UIElements.nav.nextBtn.textContent = (state.currentStepIndex === state.executionPlan.length - 1) ? 'Finish' : 'Next';
   }
-  function loadExerciseStep(exercise) {
-    UIElements.exerciseName.textContent = exercise.exercise_name;
-    UIElements.metric.style.display = 'block';
-    UIElements.restTimer.style.display = 'none';
-    UIElements.nav.pauseBtn.style.display = 'inline-block';
-    UIElements.nav.repeatBtn.style.display = 'none';
-    UIElements.nav.prevBtn.style.display = 'inline-block';
-    UIElements.nav.addRestBtn.style.display = 'none';
-    updateVisuals(exercise);
-    const duration = parseInt(exercise.duration_seconds || exercise.default_duration);
+
+  function loadExerciseStep(ex) {
+    UIElements.exerciseName.textContent = ex.exercise_name;
+    Object.assign(UIElements.metric.style, { display: 'block' });
+    Object.assign(UIElements.restTimer.style, { display: 'none' });
+    Object.assign(UIElements.nav.pauseBtn.style, { display: 'inline-block' });
+    Object.assign(UIElements.nav.repeatBtn.style, { display: 'none' });
+    Object.assign(UIElements.nav.prevBtn.style, { display: 'inline-block' });
+    Object.assign(UIElements.nav.addRestBtn.style, { display: 'none' });
+    
+    updateVisuals(ex);
+    const duration = parseInt(ex.duration_seconds || ex.default_duration);
     if (!isNaN(duration) && duration > 0) {
       state.timeLeft = duration;
       UIElements.metric.textContent = formatTime(state.timeLeft);
-      // Show Skip button for timed exercises
-      UIElements.nav.nextBtn.style.display = 'inline-block';
       UIElements.nav.nextBtn.textContent = 'Skip';
       startTimer('exercise');
     } else {
-      UIElements.metric.textContent = `${exercise.reps || 10} Reps`;
-      UIElements.nav.nextBtn.style.display = 'inline-block';
+      UIElements.metric.textContent = `${ex.reps || 10} Reps`;
       UIElements.nav.nextBtn.textContent = 'Done';
       state.timeLeft = 0;
       startTimer('manual');
     }
   }
+
   function loadRestStep(step) {
     UIElements.exerciseName.textContent = "REST";
     UIElements.metric.style.display = 'none';
@@ -131,13 +104,14 @@ document.addEventListener('DOMContentLoaded', function() {
     UIElements.nav.repeatBtn.style.display = 'inline-block';
     UIElements.nav.prevBtn.style.display = 'none';
     UIElements.nav.addRestBtn.style.display = 'inline-block';
-    UIElements.nav.nextBtn.style.display = 'inline-block';
     UIElements.nav.nextBtn.textContent = 'Skip Rest';
+    
     updateVisuals(null);
     state.timeLeft = step.duration_seconds;
     UIElements.restTimer.textContent = formatTime(state.timeLeft);
     startTimer('rest');
   }
+
   function startTimer(mode) {
     clearInterval(state.timerInterval);
     state.timerInterval = setInterval(() => {
@@ -148,142 +122,100 @@ document.addEventListener('DOMContentLoaded', function() {
           state.totalWorkoutTimeSeconds++;
           UIElements.metric.textContent = formatTime(state.timeLeft);
           calculateCalories();
-        } else {
-          UIElements.restTimer.textContent = formatTime(state.timeLeft);
-        }
-      } else if (mode !== 'manual') {
-        goToNextStep();
-      }
+        } else UIElements.restTimer.textContent = formatTime(state.timeLeft);
+      } else if (mode !== 'manual') goToNextStep();
     }, 1000);
   }
-  function goToNextStep() {
-    if (state.currentStepIndex < state.executionPlan.length) {
-      state.currentStepIndex++;
-    }
-    loadStep();
-  }
-  function goToPrevStep() {
-    if (state.currentStepIndex > 0) {
-      state.currentStepIndex--;
-      loadStep();
-    }
-  }
-  function repeatCurrentExercise() {
-    if (state.currentStepIndex > 0 && state.executionPlan[state.currentStepIndex].type === 'rest') {
-      state.currentStepIndex--;
-    }
-    loadStep();
-  }
-  function addRestTime() {
-    state.timeLeft += 15;
-    UIElements.restTimer.textContent = formatTime(state.timeLeft);
-  }
+
+  function goToNextStep() { state.currentStepIndex++; loadStep(); }
+  function goToPrevStep() { if (state.currentStepIndex > 0) { state.currentStepIndex--; loadStep(); } }
+  function repeatCurrentExercise() { if (state.currentStepIndex > 0 && state.executionPlan[state.currentStepIndex].type === 'rest') state.currentStepIndex--; loadStep(); }
+  function addRestTime() { state.timeLeft += 15; UIElements.restTimer.textContent = formatTime(state.timeLeft); }
+  
   function togglePause() {
     state.isPaused = !state.isPaused;
     UIElements.nav.pauseBtn.textContent = state.isPaused ? 'Resume' : 'Pause';
-    if (state.isPaused) {
-      UIElements.visual.videoPlayer.pause();
-    } else {
-      UIElements.visual.videoPlayer.play().catch(e => console.warn("Autoplay prevented:", e));
-    }
+    state.isPaused ? UIElements.visual.videoPlayer.pause() : UIElements.visual.videoPlayer.play().catch(() => {});
   }
-  function exitWorkout() {
-    if (confirm('Are you sure you want to exit? Your progress will not be saved.')) {
-      window.location.href = 'home.php';
-    }
-  }
+
+  function exitWorkout() { if (confirm('Exit? Progress will not be saved.')) window.location.href = 'home.php'; }
+
   function finishWorkout() {
     clearInterval(state.timerInterval);
     UIElements.exerciseName.textContent = "Workout Complete! 🎉";
-    UIElements.metric.textContent = "✓";
-    UIElements.restTimer.style.display = 'none';
-    UIElements.visual.container.innerHTML = '<span style="font-size: 1.2em; color: var(--secondary-text);">Saving your progress...</span>';
+    UIElements.visual.container.innerHTML = '<div class="spinner"></div><p style="color: var(--secondary-text); margin-top: 10px;">Saving results...</p>';
     UIElements.nav.container.style.display = 'none';
-    const workoutData = {
-      duration: state.totalWorkoutTimeSeconds,
-      calories: Math.round(state.totalCaloriesBurned),
-      name: `${state.workoutType.charAt(0).toUpperCase() + state.workoutType.slice(1)} Workout`
+    
+    const workoutData = { 
+        duration: state.totalWorkoutTimeSeconds, 
+        calories: Math.round(state.totalCaloriesBurned), 
+        name: `${state.workoutType.charAt(0).toUpperCase() + state.workoutType.slice(1)} Workout` 
     };
-    fetch('../php/api/workouts/save_workout.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(workoutData)
-      })
-      .then(res => res.json())
-      .then(data => {
-        let message = `Workout Complete! Time: ${Math.round(state.totalWorkoutTimeSeconds / 60)} min. Calories: ${Math.round(state.totalCaloriesBurned)} kcal.`;
+
+    window.apiFetch('../php/api/workouts/save_workout.php', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(workoutData) 
+    })
+    .then(data => {
         if (data.status === 'success') {
-            window.showMessage(message + " Progress saved!", 'success');
+            let msg = `Complete! ${Math.round(state.totalWorkoutTimeSeconds / 60)} min. ${Math.round(state.totalCaloriesBurned)} kcal.`;
+            window.showMessage(msg + " Progress saved!", 'success');
+            setTimeout(() => { window.location.href = 'home.php'; }, 2000);
         } else {
-            window.showMessage(message + ` Save error: ${data.message}`);
+            window.showMessage(data.message || 'Error saving workout.');
+            setTimeout(() => { window.location.href = 'home.php'; }, 3000);
         }
-        // Delay redirect to allow reading the message
+    })
+    .catch(err => {
+        console.error('Save workout error:', err);
+        window.showMessage('Network error while saving progress.');
         setTimeout(() => { window.location.href = 'home.php'; }, 3000);
-      })
-      .catch(err => {
-          console.error('Save error:', err);
-          window.location.href = 'home.php';
-      });
+    });
   }
+
   function calculateCalories() {
-    const currentExercise = state.executionPlan[state.currentStepIndex];
-    if (currentExercise && currentExercise.met_value) {
-      const caloriesPerSecond = (currentExercise.met_value * state.userWeightKg * 3.5) / 12000;
-      state.totalCaloriesBurned += caloriesPerSecond;
-    }
+    const cur = state.executionPlan[state.currentStepIndex];
+    if (cur?.met_value) state.totalCaloriesBurned += (cur.met_value * state.userWeightKg * 3.5) / 12000;
   }
-  function updateVisuals(exercise) {
+
+  function updateVisuals(ex) {
     const { videoPlayer, placeholderImg, placeholderText } = UIElements.visual;
-    placeholderImg.onerror = function() {
-        this.src = '../assets/exercises/placeholder.png';
-        this.onerror = null;
-    };
-    if (exercise && exercise.image_url) {
-      let visualPath = exercise.image_url;
-      if (!visualPath.startsWith('../') && !visualPath.startsWith('http')) {
-          visualPath = '../' + visualPath;
-      }
-      const isVideo = visualPath.endsWith('.mp4') || visualPath.endsWith('.webm');
+    if (ex?.image_url) {
+      const src = window.getAvatarPath(ex.image_url).replace('default_avatar.png', 'exercises/placeholder.png');
+      const isVideo = src.endsWith('.mp4') || src.endsWith('.webm');
       videoPlayer.style.display = isVideo ? 'block' : 'none';
       placeholderImg.style.display = isVideo ? 'none' : 'block';
       placeholderText.style.display = 'none';
-      if (isVideo) {
-        if (videoPlayer.src !== visualPath) videoPlayer.src = visualPath;
-        videoPlayer.load();
-        videoPlayer.play().catch(e => console.warn("Autoplay prevented:", e));
-      } else {
-        if (placeholderImg.getAttribute('src') !== visualPath) {
-             placeholderImg.src = visualPath;
-        }
-      }
+      if (isVideo) { if (videoPlayer.src !== src) videoPlayer.src = src; videoPlayer.play().catch(() => {}); }
+      else placeholderImg.src = src;
     } else {
       videoPlayer.style.display = 'none';
       placeholderImg.style.display = 'none';
       placeholderText.style.display = 'block';
-      placeholderText.textContent = exercise ? "No visual available" : "Take a breather 💪";
+      placeholderText.textContent = ex ? "No visual available" : "Take a breather 💪";
     }
   }
-  function formatTime(seconds) {
-    if (isNaN(seconds) || seconds < 0) return "00:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+  function formatTime(s) {
+    const mins = Math.floor(s / 60);
+    return `${String(mins).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
   }
-  function handleWorkoutError(message) {
+
+  function handleWorkoutError(msg) {
     clearInterval(state.timerInterval);
-    UIElements.exerciseName.textContent = "Error Loading Workout";
-    UIElements.metric.style.display = 'none';
-    UIElements.restTimer.style.display = 'none';
-    UIElements.visual.container.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--secondary-text);">${message}</div>`;
-    UIElements.nav.container.innerHTML = `<button onclick="window.location.href='home.php'" class="btn" style="background:var(--primary-color);color:white;">Go Home</button>`;
+    UIElements.exerciseName.textContent = "Error";
+    UIElements.visual.container.innerHTML = `<div style="padding: 30px;">${msg}</div>`;
+    UIElements.nav.container.innerHTML = `<button onclick="window.location.href='home.php'" class="btn btn-primary">Go Home</button>`;
   }
+
   function bindEventListeners() {
-    UIElements.nav.nextBtn.addEventListener('click', goToNextStep);
-    UIElements.nav.prevBtn.addEventListener('click', goToPrevStep);
-    UIElements.nav.repeatBtn.addEventListener('click', repeatCurrentExercise);
-    UIElements.nav.addRestBtn.addEventListener('click', addRestTime);
-    UIElements.nav.pauseBtn.addEventListener('click', togglePause);
-    UIElements.nav.exitBtn.addEventListener('click', exitWorkout);
+    UIElements.nav.nextBtn.onclick = goToNextStep;
+    UIElements.nav.prevBtn.onclick = goToPrevStep;
+    UIElements.nav.repeatBtn.onclick = repeatCurrentExercise;
+    UIElements.nav.addRestBtn.onclick = addRestTime;
+    UIElements.nav.pauseBtn.onclick = togglePause;
+    UIElements.nav.exitBtn.onclick = exitWorkout;
   }
   init();
 });

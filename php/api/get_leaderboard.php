@@ -1,12 +1,32 @@
 <?php
 define('FLEXZONE_APP', true);
 require_once '../config/db_connection.php';
-$conn = getDbConnection();
-if (!$conn) {
-    sendJsonResponse('error', null, 'Database connection failed');
-}
+
+$conn = getVerifiedConnection();
 $limit = isset($_GET['limit']) ? max(1, min(100, sanitizeInput($_GET['limit'], 'int'))) : 50;
 $timeFrame = isset($_GET['timeframe']) ? sanitizeInput($_GET['timeframe']) : 'all_time';
+
+$dateConditionWl = "";
+$dateConditionLog = "";
+
+switch ($timeFrame) {
+    case 'week':
+        $dateConditionWl = " AND wl.log_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)";
+        $dateConditionLog = " AND log_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)";
+        break;
+    case 'month':
+        $dateConditionWl = " AND wl.log_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')";
+        $dateConditionLog = " AND log_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')";
+        break;
+    case 'year':
+        $dateConditionWl = " AND wl.log_date >= DATE_FORMAT(CURDATE(), '%Y-01-01')";
+        $dateConditionLog = " AND log_date >= DATE_FORMAT(CURDATE(), '%Y-01-01')";
+        break;
+    case 'all_time':
+    default:
+        break;
+}
+
 try {
     $sql = "SELECT 
                 u.username,
@@ -15,30 +35,15 @@ try {
                 SUM(wl.calories_burned) AS total_calories
             FROM users u
             INNER JOIN workout_log wl ON u.id = wl.user_id
-            WHERE wl.duration_seconds > 0";
-    switch ($timeFrame) {
-        case 'week':
-            $sql .= " AND YEARWEEK(wl.log_date, 1) = YEARWEEK(CURDATE(), 1)";
-            break;
-        case 'month':
-            $sql .= " AND YEAR(wl.log_date) = YEAR(CURDATE()) 
-                     AND MONTH(wl.log_date) = MONTH(CURDATE())";
-            break;
-        case 'year':
-            $sql .= " AND YEAR(wl.log_date) = YEAR(CURDATE())";
-            break;
-        case 'all_time':
-        default:
-            break;
-    }
-    $sql .= " GROUP BY u.id, u.username
-             HAVING total_duration > 0
-             ORDER BY total_duration DESC
-             LIMIT ?";
+            WHERE wl.duration_seconds > 0" . $dateConditionWl . "
+            GROUP BY u.id, u.username
+            HAVING total_duration > 0
+            ORDER BY total_duration DESC
+            LIMIT ?";
+            
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        error_log("Get leaderboard prepare failed: " . $conn->error);
-        sendJsonResponse('error', null, 'Failed to retrieve leaderboard');
+        throw new Exception("Prepare failed: " . $conn->error);
     }
     $stmt->bind_param("i", $limit);
     $stmt->execute();
@@ -55,6 +60,7 @@ try {
         ];
     }
     $stmt->close();
+    
     $userRank = null;
     if (isLoggedIn()) {
         $userId = getCurrentUserId();
@@ -63,47 +69,27 @@ try {
                         SELECT u.id, SUM(wl.duration_seconds) AS total_duration
                         FROM users u
                         INNER JOIN workout_log wl ON u.id = wl.user_id
-                        WHERE wl.duration_seconds > 0";
-        switch ($timeFrame) {
-            case 'week':
-                $rankSql .= " AND YEARWEEK(wl.log_date, 1) = YEARWEEK(CURDATE(), 1)";
-                break;
-            case 'month':
-                $rankSql .= " AND YEAR(wl.log_date) = YEAR(CURDATE()) 
-                             AND MONTH(wl.log_date) = MONTH(CURDATE())";
-                break;
-            case 'year':
-                $rankSql .= " AND YEAR(wl.log_date) = YEAR(CURDATE())";
-                break;
-        }
-        $rankSql .= " GROUP BY u.id
-                      HAVING total_duration > (
-                          SELECT COALESCE(SUM(duration_seconds), 0)
-                          FROM workout_log
-                          WHERE user_id = ?";
-        switch ($timeFrame) {
-            case 'week':
-                $rankSql .= " AND YEARWEEK(log_date, 1) = YEARWEEK(CURDATE(), 1)";
-                break;
-            case 'month':
-                $rankSql .= " AND YEAR(log_date) = YEAR(CURDATE()) 
-                             AND MONTH(log_date) = MONTH(CURDATE())";
-                break;
-            case 'year':
-                $rankSql .= " AND YEAR(log_date) = YEAR(CURDATE())";
-                break;
-        }
-        $rankSql .= ")) as ranked_users";
+                        WHERE wl.duration_seconds > 0" . $dateConditionWl . "
+                        GROUP BY u.id
+                        HAVING total_duration > (
+                            SELECT COALESCE(SUM(duration_seconds), 0)
+                            FROM workout_log
+                            WHERE user_id = ?" . $dateConditionLog . "
+                        )
+                    ) as ranked_users";
+                    
         $rankStmt = $conn->prepare($rankSql);
         if ($rankStmt !== false) {
             $rankStmt->bind_param("i", $userId);
             $rankStmt->execute();
             $rankResult = $rankStmt->get_result();
-            $rankData = $rankResult->fetch_assoc();
-            $userRank = (int)$rankData['user_rank'];
+            if ($rankData = $rankResult->fetch_assoc()) {
+                $userRank = (int)$rankData['user_rank'];
+            }
             $rankStmt->close();
         }
     }
+    
     sendJsonResponse('success', [
         'leaderboard' => $leaderboard,
         'timeframe' => $timeFrame,

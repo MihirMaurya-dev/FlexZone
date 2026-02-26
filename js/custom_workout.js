@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const customWorkoutForm = document.getElementById('custom-workout-form');
     if (customWorkoutForm) {
-        customWorkoutForm.addEventListener('submit', function (event) {
+        customWorkoutForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const muscleGroup = document.getElementById('muscle_group').value;
             const duration = document.getElementById('duration').value;

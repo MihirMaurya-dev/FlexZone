@@ -1,47 +1,37 @@
 <?php
 define('FLEXZONE_APP', true);
 require_once '../../config/db_connection.php';
-requireLogin();
-$conn = getDbConnection();
-if (!$conn) {
-    sendJsonResponse('error', null, 'Database connection failed');
-}
-$userId = getCurrentUserId();
+
+$conn = getVerifiedConnection();
+$userId = getRequiredUserId();
+
 $page = isset($_GET['page']) ? max(1, sanitizeInput($_GET['page'], 'int')) : 1;
 $limit = isset($_GET['limit']) ? max(1, min(100, sanitizeInput($_GET['limit'], 'int'))) : 50;
 $offset = ($page - 1) * $limit;
+
 try {
+    // Total count for pagination
     $countSql = "SELECT COUNT(log_id) as total FROM workout_log WHERE user_id = ?";
     $countStmt = $conn->prepare($countSql);
-    if ($countStmt === false) {
-        error_log("Get workout history count prepare failed: " . $conn->error);
-        $totalWorkouts = 0;
-    } else {
+    $totalWorkouts = 0;
+    
+    if ($countStmt) {
         $countStmt->bind_param("i", $userId);
         $countStmt->execute();
-        $countResult = $countStmt->get_result();
-        $countData = $countResult->fetch_assoc();
-        $totalWorkouts = (int)$countData['total'];
+        $totalWorkouts = (int)$countStmt->get_result()->fetch_assoc()['total'];
         $countStmt->close();
     }
-    $sql = "SELECT 
-                log_id,
-                workout_name,
-                duration_seconds,
-                calories_burned,
-                log_date
-            FROM workout_log
-            WHERE user_id = ?
-            ORDER BY log_date DESC
-            LIMIT ? OFFSET ?";
+
+    $sql = "SELECT log_id, workout_name, duration_seconds, calories_burned, log_date 
+            FROM workout_log 
+            WHERE user_id = ? 
+            ORDER BY log_date DESC LIMIT ? OFFSET ?";
+            
     $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        error_log("Get workout history prepare failed: " . $conn->error);
-        sendJsonResponse('error', null, 'Failed to retrieve workout history');
-    }
     $stmt->bind_param("iii", $userId, $limit, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
+    
     $history = [];
     while ($row = $result->fetch_assoc()) {
         $history[] = [
@@ -53,18 +43,18 @@ try {
         ];
     }
     $stmt->close();
+
     sendJsonResponse('success', [
         'history' => $history,
         'total' => $totalWorkouts,
         'page' => $page,
         'limit' => $limit
     ]);
+
 } catch (Exception $e) {
     error_log("Get workout history error: " . $e->getMessage());
-    sendJsonResponse('error', null, 'Failed to retrieve workout history');
+    sendJsonResponse('error', null, 'Failed to retrieve history');
 } finally {
-    if (isset($conn)) {
-        $conn->close();
-    }
+    if (isset($conn)) $conn->close();
 }
 ?>

@@ -149,3 +149,51 @@ Stack trace:
 #0 C:\xampp\htdocs\FlexZone\pages\progress.php(106): include()
 #1 {main}
   thrown in C:\xampp\htdocs\FlexZone\includes\navbar.php on line 3
+[25-Feb-2026 07:26:20 Europe/Berlin] Login error: MySQL server has gone away
+[25-Feb-2026 07:26:46 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[25-Feb-2026 14:05:35 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[25-Feb-2026 14:05:35 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\FlexZone\add_indexes.php:12
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\add_indexes.php on line 12
+[25-Feb-2026 14:10:18 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[25-Feb-2026 14:10:18 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\FlexZone\add_indexes.php:12
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\add_indexes.php on line 12
+[25-Feb-2026 14:10:22 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it
+[25-Feb-2026 14:10:22 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\xampp\htdocs\FlexZone\add_indexes.php:12
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\FlexZone\add_indexes.php on line 12
+[26-Feb-2026 14:52:43 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 14:52:52 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 14:52:59 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 14:53:14 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 14:53:20 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 14:53:39 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 15:02:34 Europe/Berlin] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\auth\signup.php on line 18
+[26-Feb-2026 16:33:18 Europe/Berlin] PHP Warning:  Undefined variable $statsSql in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:33:18 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:33:18 Europe/Berlin] Get user stats error: Query was empty
+[26-Feb-2026 16:33:33 Europe/Berlin] PHP Warning:  Undefined variable $statsSql in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:33:33 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:33:33 Europe/Berlin] Get user stats error: Query was empty
+[26-Feb-2026 16:33:54 Europe/Berlin] PHP Warning:  Undefined variable $dateConditionWl in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 22
+[26-Feb-2026 16:33:54 Europe/Berlin] PHP Warning:  Undefined variable $rankSql in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
+[26-Feb-2026 16:33:54 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
+[26-Feb-2026 16:33:54 Europe/Berlin] Get leaderboard error: Query was empty
+[26-Feb-2026 16:34:26 Europe/Berlin] PHP Warning:  Undefined variable $dateConditionWl in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 22
+[26-Feb-2026 16:34:26 Europe/Berlin] PHP Warning:  Undefined variable $rankSql in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
+[26-Feb-2026 16:34:26 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
+[26-Feb-2026 16:34:26 Europe/Berlin] Get leaderboard error: Query was empty
+[26-Feb-2026 16:35:18 Europe/Berlin] PHP Warning:  Undefined variable $statsSql in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:35:18 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:35:18 Europe/Berlin] Get user stats error: Query was empty
+[26-Feb-2026 16:35:37 Europe/Berlin] PHP Warning:  Undefined variable $statsSql in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:35:37 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\user\get_user_stats.php on line 8
+[26-Feb-2026 16:35:37 Europe/Berlin] Get user stats error: Query was empty
+[26-Feb-2026 16:41:53 Europe/Berlin] PHP Warning:  Undefined variable $dateConditionWl in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 22
+[26-Feb-2026 16:41:53 Europe/Berlin] PHP Warning:  Undefined variable $rankSql in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
+[26-Feb-2026 16:41:53 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
+[26-Feb-2026 16:41:53 Europe/Berlin] Get leaderboard error: Query was empty

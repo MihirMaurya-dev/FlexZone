@@ -9,15 +9,17 @@ define('DB_PASS', '');
 define('DB_NAME', 'flexzone');
 define('DB_PORT', 3307);
 define('DB_CHARSET', 'utf8mb4');
+
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 ini_set('error_log', __DIR__ . '/../../logs/php_errors.log');
+
 if (!is_dir(__DIR__ . '/../../logs')) {
     mkdir(__DIR__ . '/../../logs', 0755, true);
 }
-function getDbConnection(): ?mysqli
-{
+
+function getDbConnection(): ?mysqli {
     static $conn = null;
     if ($conn === null) {
         try {
@@ -35,8 +37,16 @@ function getDbConnection(): ?mysqli
     }
     return $conn;
 }
-function sendJsonResponse(string $status, ?array $data = null, ?string $message = null): void
-{
+
+function getVerifiedConnection(): mysqli {
+    $conn = getDbConnection();
+    if (!$conn) {
+        sendJsonResponse('error', null, 'Database connection failed');
+    }
+    return $conn;
+}
+
+function sendJsonResponse(string $status, ?array $data = null, ?string $message = null): void {
     header('Content-Type: application/json; charset=utf-8');
     $response = ['status' => $status];
     if ($message !== null) {
@@ -48,38 +58,42 @@ function sendJsonResponse(string $status, ?array $data = null, ?string $message 
     echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
-function sanitizeInput($data, string $type = 'string')
-{
+
+function sanitizeInput($data, string $type = 'string') {
     if ($data === null || $data === '') {
         return null;
     }
     switch ($type) {
-        case 'email':
-            return filter_var($data, FILTER_SANITIZE_EMAIL);
-        case 'int':
-            return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
-        case 'float':
-            return filter_var($data, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        default:
-            return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+        case 'email': return filter_var($data, FILTER_SANITIZE_EMAIL);
+        case 'int': return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+        case 'float': return filter_var($data, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        default: return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
     }
 }
-function isLoggedIn(): bool
-{
+
+function isLoggedIn(): bool {
     return isset($_SESSION['userid']) && isset($_SESSION['username']);
 }
-function requireLogin(): void
-{
+
+function requireLogin(): void {
     if (!isLoggedIn()) {
         sendJsonResponse('error', null, 'Authentication required. Please log in.');
     }
 }
-function getCurrentUserId(): ?int
-{
+
+function getCurrentUserId(): ?int {
     return isLoggedIn() ? (int)$_SESSION['userid'] : null;
 }
-function startSecureSession(): void
-{
+
+function getRequiredUserId(): int {
+    $userId = getCurrentUserId();
+    if (!$userId) {
+        sendJsonResponse('error', null, 'Authentication required');
+    }
+    return $userId;
+}
+
+function startSecureSession(): void {
     if (session_status() === PHP_SESSION_NONE) {
         ini_set('session.cookie_httponly', '1');
         ini_set('session.use_only_cookies', '1');

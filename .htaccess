@@ -1,6 +1,7 @@
 AddDefaultCharset UTF-8
 
-<FilesMatch "\.(html|php)$">
+# Remove forced text/html for PHP files to allow APIs to set application/json
+<FilesMatch "\.html$">
     Header set Content-Type "text/html; charset=UTF-8"
 </FilesMatch>
 

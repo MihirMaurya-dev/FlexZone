@@ -1,61 +1,59 @@
 <?php
 define('FLEXZONE_APP', true);
 require_once '../../config/db_connection.php';
-$conn = getDbConnection();
-requireLogin();
-if (!$conn) {
-    sendJsonResponse('error', null, 'Database connection failed');
-}
+
+$conn = getVerifiedConnection();
+$userId = getRequiredUserId();
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendJsonResponse('error', null, 'Invalid request method');
 }
-$userId = getCurrentUserId();
+
+// Data mapping from onboarding and profile forms
 $height = isset($_POST['height_cm']) ? sanitizeInput($_POST['height_cm'], 'float') : null;
 $weight = isset($_POST['weight_kg']) ? sanitizeInput($_POST['weight_kg'], 'float') : null;
-$dob = isset($_POST['dob']) && !empty($_POST['dob']) ? sanitizeInput($_POST['dob']) : null;
-$goal = isset($_POST['fitness_goal']) ? sanitizeInput($_POST['fitness_goal']) : 'general_fitness';
+$age = isset($_POST['age']) ? sanitizeInput($_POST['age'], 'int') : null;
+$goal = isset($_POST['goal']) ? sanitizeInput($_POST['goal']) : null;
 $gender = isset($_POST['gender']) ? sanitizeInput($_POST['gender']) : null;
-$activityLevel = isset($_POST['activity_level']) ? sanitizeInput($_POST['activity_level']) : null;
-if ($height !== null && ($height < 50 || $height > 300)) {
-    sendJsonResponse('error', null, 'Height must be between 50 and 300 cm');
+$activityLevel = isset($_POST['activity']) ? sanitizeInput($_POST['activity']) : null;
+
+// Validations
+if ($height !== null && ($height < 50 || $height > 250)) {
+    sendJsonResponse('error', null, 'Invalid height');
 }
-if ($weight !== null && ($weight < 20 || $weight > 500)) {
-    sendJsonResponse('error', null, 'Weight must be between 20 and 500 kg');
+if ($weight !== null && ($weight < 20 || $weight > 300)) {
+    sendJsonResponse('error', null, 'Invalid weight');
 }
-$validGoals = ['general_fitness', 'weight_loss', 'muscle_gain', 'endurance'];
-if (!in_array($goal, $validGoals)) {
-    $goal = 'general_fitness';
-}
-if ($dob !== null) {
-    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-    if (!$dobDate || $dobDate->format('Y-m-d') !== $dob) {
-        sendJsonResponse('error', null, 'Invalid date format');
-    }
-    if ($dobDate > new DateTime()) {
-        sendJsonResponse('error', null, 'Date of birth cannot be in the future');
-    }
-    $minDate = new DateTime('-120 years');
-    if ($dobDate < $minDate) {
-        sendJsonResponse('error', null, 'Invalid date of birth');
-    }
-}
+
 try {
-    $sql = "UPDATE users 
-            SET height_cm = ?, weight_kg = ?, dob = ?, fitness_goal = ?, gender = ?, activity_level = ?
+    // If age is provided but DOB isn't in DB, we can estimate DOB or just ignore if schema only has DOB
+    // For now, let's update what we have in the schema
+    $sql = "UPDATE users SET 
+                height_cm = COALESCE(?, height_cm), 
+                weight_kg = COALESCE(?, weight_kg), 
+                fitness_goal = COALESCE(?, fitness_goal), 
+                gender = COALESCE(?, gender), 
+                activity_level = COALESCE(?, activity_level) 
             WHERE id = ?";
+            
     $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        error_log("Update profile prepare failed: " . $conn->error);
-        sendJsonResponse('error', null, 'Failed to update profile');
-    }
-    $stmt->bind_param("ddssssi", $height, $weight, $dob, $goal, $gender, $activityLevel, $userId);
+    $stmt->bind_param("ddsssi", $height, $weight, $goal, $gender, $activityLevel, $userId);
+    
     if ($stmt->execute()) {
         $stmt->close();
+        
+        // Also log weight if provided
+        if ($weight) {
+            $wSql = "INSERT INTO weight_log (user_id, weight_kg) VALUES (?, ?)";
+            $wStmt = $conn->prepare($wSql);
+            $wStmt->bind_param("id", $userId, $weight);
+            $wStmt->execute();
+            $wStmt->close();
+        }
+        
         sendJsonResponse('success', null, 'Profile updated successfully');
     } else {
-        error_log("Update profile execute failed: " . $stmt->error);
-        $stmt->close();
-        sendJsonResponse('error', null, 'Failed to update profile');
+        throw new Exception("Execute failed: " . $stmt->error);
     }
 } catch (Exception $e) {
     error_log("Update profile error: " . $e->getMessage());
