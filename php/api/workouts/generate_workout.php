@@ -45,18 +45,23 @@ final class WorkoutGenerator {
         if (!in_array('None', $equipment, true)) {
             $equipment[] = 'None';
         }
-        $estimatedSets = (int)floor($durationMinutes / 1.5);
-        $totalTarget = max(5, min(40, $estimatedSets));
         
-        $warmup = $this->fetchRandom(self::BASE_SELECT, ['type' => 'Warm-up'], 2);
-        $cooldown = $this->fetchRandom(self::BASE_SELECT, ['type' => 'Cool-down'], 1);
+        // Custom workouts use 3 sets for strength, taking ~4-5 mins per exercise.
+        // Warmup/Cooldown take ~3-5 mins total.
+        $availableMins = max(2, $durationMinutes - 4);
+        $mainTarget = max(1, (int)floor($availableMins / 4.5));
+        
+        $warmupCount = $durationMinutes >= 30 ? 3 : 2;
+        $cooldownCount = ($durationMinutes >= 45) ? 2 : 1;
+        
+        $warmup = $this->fetchRandom(self::BASE_SELECT, ['type' => 'Warm-up'], $warmupCount);
+        $cooldown = $this->fetchRandom(self::BASE_SELECT, ['type' => 'Cool-down'], $cooldownCount);
         
         $filters = ['type' => ['Strength', 'Cardio'], 'equipment' => $equipment];
         if ($muscleGroup) {
             $filters['muscle_group'] = $muscleGroup;
         }
 
-        $mainTarget = max(1, $totalTarget - 3);
         $main = $this->fetchRandom(self::BASE_SELECT, $filters, $mainTarget);
         $main = $this->ensureCount($main, $mainTarget);
         

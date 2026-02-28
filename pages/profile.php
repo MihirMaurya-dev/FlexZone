@@ -88,6 +88,19 @@ include '../includes/header.php';
 
         <section id="settings" class="card">
             <h2>Preferences</h2>
+            
+            <div class="setting-group" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <label style="margin-bottom: 0;">Display Theme</label>
+                <div class="theme-toggle">
+                    <input type="checkbox" class="checkbox" id="checkbox">
+                    <label for="checkbox" class="theme-label">
+                        <i class="bx bxs-moon"></i>
+                        <i class="bx bxs-sun"></i>
+                        <div class="ball"></div>
+                    </label>
+                </div>
+            </div>
+
             <form id="settings-form" onsubmit="saveSettings(event)">
                 <div class="setting-group">
                     <label>Weight Units</label>
