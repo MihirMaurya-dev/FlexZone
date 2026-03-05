@@ -11,10 +11,21 @@ include '../includes/header.php';
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
+        width: 100%;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
         .progress-grid {
             grid-template-columns: 1fr;
+            width: 100%;
+        }
+        .main-card {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding: 24px 16px;
+        }
+        .progress-form-inner {
+            grid-template-columns: 1fr !important;
         }
     }
     .upload-box {
@@ -61,7 +72,7 @@ include '../includes/header.php';
                     <label>Date</label>
                     <input type="date" name="log_date" required class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--body-bg); color: var(--text-color);">
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="progress-form-inner" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="form-group">
                         <label>Weight (kg)</label>
                         <input type="number" step="0.1" name="weight_kg" class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--body-bg); color: var(--text-color);">

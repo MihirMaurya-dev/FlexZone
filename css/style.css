@@ -1536,3 +1536,67 @@ td {
 [class*="card-gradient-"]:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
+
+@media (max-width: 480px) {
+    .dashboard,
+    .profile-layout,
+    .progress-page,
+    .leaderboard-page,
+    .history-page {
+        padding: 24px 16px 120px 16px;
+    }
+
+    .welcome-message h1 {
+        font-size: 1.5rem;
+    }
+
+    .navbar {
+        bottom: 20px;
+        width: calc(100% - 32px);
+        justify-content: space-around;
+        padding: 6px 10px;
+    }
+
+    .navbar a {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .options-container {
+        grid-template-columns: 1fr;
+    }
+
+    .mini-widgets-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-header {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        width: 100%;
+    }
+
+    .theme-switch-wrapper {
+        top: 10px;
+        right: 10px;
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 500px;
+    }
+}
