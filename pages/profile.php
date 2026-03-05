@@ -27,6 +27,8 @@ include '../includes/header.php';
             <a href="#equipment"><i class='bx bx-dumbbell'></i> My Garage</a>
             <a href="#settings"><i class='bx bx-cog'></i> Settings</a>
             <a href="#" onclick="exportData()"><i class='bx bx-download'></i> Export Data</a>
+            <a href="../help.html"><i class='bx bx-help-circle'></i> Help Center</a>
+            <a href="../credits.html"><i class='bx bx-info-circle'></i> Credits</a>
         </nav>
     </aside>
 
@@ -64,7 +66,7 @@ include '../includes/header.php';
             <form id="weight-form" onsubmit="logWeight(event)">
                 <div style="display: flex; gap: 15px; align-items: flex-end;">
                     <div class="setting-group" style="flex: 1; margin-bottom: 0;">
-                        <label>Weight (kg)</label>
+                        <label id="weight-label">Weight (kg)</label>
                         <input type="number" step="0.1" id="weight-input" name="weight_kg" class="form-input" placeholder="0.0" required>
                     </div>
                     <button type="submit" class="save-btn" style="width: auto; padding: 12px 30px;">Log</button>

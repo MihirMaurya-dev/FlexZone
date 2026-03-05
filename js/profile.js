@@ -171,6 +171,8 @@ function saveGarage() {
 function updateSettingsForm() {
     if (userSettings.units) {
         document.getElementById(`unit-${userSettings.units === 'kg' ? 'kg' : 'lbs'}`).checked = true;
+        const weightLabel = document.getElementById('weight-label');
+        if (weightLabel) weightLabel.textContent = `Weight (${userSettings.units})`;
     }
     if (userSettings.notif_workouts !== undefined) {
         document.querySelector('input[name="notif_workouts"]').checked = userSettings.notif_workouts;
@@ -193,6 +195,9 @@ function saveSettings(e) {
     window.handleFormSubmit(e, '../php/api/user/save_settings.php', () => {
         window.showMessage('Settings saved!', 'success');
         userSettings = settings;
+        localStorage.setItem('userSettings', JSON.stringify(settings));
+        const weightLabel = document.getElementById('weight-label');
+        if (weightLabel) weightLabel.textContent = `Weight (${units})`;
     }, {
         formData
     });
@@ -204,15 +209,27 @@ function exportData() {
 
 function logWeight(e) {
     const weightInput = document.getElementById('weight-input');
-    if (!weightInput.value || weightInput.value <= 0) {
+    let weightVal = parseFloat(weightInput.value);
+    
+    if (!weightVal || weightVal <= 0) {
         window.showMessage("Please enter a valid weight.");
         return;
     }
+
+    const units = window.getUserUnits();
+    if (units === 'lbs') {
+        weightVal = weightVal / 2.20462;
+    }
+
+    const formData = new FormData();
+    formData.append('weight_kg', weightVal.toFixed(2));
+
     window.handleFormSubmit(e, '../php/api/user/log_weight.php', () => {
         window.showMessage('Weight logged successfully!', 'success');
         weightInput.value = '';
         loadProfileData();
     }, {
+        formData,
         loadingText: 'Logging...'
     });
 }

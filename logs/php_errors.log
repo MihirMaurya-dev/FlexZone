@@ -197,3 +197,4 @@ Stack trace:
 [26-Feb-2026 16:41:53 Europe/Berlin] PHP Warning:  Undefined variable $rankSql in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
 [26-Feb-2026 16:41:53 Europe/Berlin] PHP Deprecated:  mysqli::prepare(): Passing null to parameter #1 ($query) of type string is deprecated in C:\xampp\htdocs\FlexZone\php\api\get_leaderboard.php on line 41
 [26-Feb-2026 16:41:53 Europe/Berlin] Get leaderboard error: Query was empty
+[28-Feb-2026 11:45:37 Europe/Berlin] Database connection exception: No connection could be made because the target machine actively refused it

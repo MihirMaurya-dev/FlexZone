@@ -135,7 +135,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         month: 'short'
                     });
                 });
-                const weightData = data.history.map(item => item.weight_kg);
+                const units = window.getUserUnits();
+                const weightData = data.history.map(item => {
+                    if (units === 'lbs') return parseFloat((item.weight_kg * 2.20462).toFixed(1));
+                    return parseFloat(item.weight_kg);
+                });
                 if (weightChartCanvas) {
                     if (weightChartInstance) weightChartInstance.destroy();
                     const accentColor = '#2ecc71';
@@ -145,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         data: {
                             labels: weightLabels,
                             datasets: [{
-                                label: 'Weight (kg)',
+                                label: `Weight (${units})`,
                                 data: weightData,
                                 borderColor: accentColor,
                                 backgroundColor: accentColor + '1A',

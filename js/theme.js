@@ -13,6 +13,25 @@ window.getAvatarPath = function(avatar) {
     return '../assets/' + avatar;
 };
 
+window.getUserUnits = function() {
+    try {
+        const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        return settings.units || 'kg';
+    } catch (e) {
+        return 'kg';
+    }
+};
+
+window.formatWeight = function(weightKg, units = null) {
+    if (weightKg === null || weightKg === undefined || weightKg === '') return '--';
+    const targetUnits = units || window.getUserUnits();
+    if (targetUnits === 'lbs') {
+        const weightLbs = parseFloat(weightKg) * 2.20462;
+        return `${weightLbs.toFixed(1)} lbs`;
+    }
+    return `${parseFloat(weightKg).toFixed(1)} kg`;
+};
+
 window.apiFetch = async function(url, options = {}) {
     try {
         const response = await fetch(url, options);
@@ -128,8 +147,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerAvatar = document.getElementById('header-avatar');
     if (headerAvatar) {
         window.apiFetch('../php/api/user/get_profile_full.php').then(data => {
-            if (data.status === 'success' && data.user.avatar) {
-                headerAvatar.src = window.getAvatarPath(data.user.avatar);
+            if (data.status === 'success') {
+                if (data.user.avatar) {
+                    headerAvatar.src = window.getAvatarPath(data.user.avatar);
+                }
+                if (data.settings) {
+                    localStorage.setItem('userSettings', JSON.stringify(data.settings));
+                }
             }
         }).catch(() => {});
     }

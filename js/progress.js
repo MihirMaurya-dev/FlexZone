@@ -35,7 +35,19 @@ function loadProgressHistory() {
                 const photosHtml = [entry.photo_front, entry.photo_side, entry.photo_back].filter(p => p).map(p => ` <img src="../${p}" onclick="window.open(this.src)"> `).join('');
                 const item = document.createElement('div');
                 item.className = 'timeline-item';
-                item.innerHTML = ` <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"> <strong style="color: var(--primary-color);">${date}</strong> <span>${entry.weight_kg ? entry.weight_kg + 'kg' : ''}</span> </div> <div style="font-size: 0.9em; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; color: var(--secondary-text);"> ${entry.chest_cm ? `<span>Chest: ${entry.chest_cm}cm</span>` : ''} ${entry.waist_cm ? `<span>Waist: ${entry.waist_cm}cm</span>` : ''} ${entry.arms_cm ? `<span>Arms: ${entry.arms_cm}cm</span>` : ''} ${entry.thighs_cm ? `<span>Thighs: ${entry.thighs_cm}cm</span>` : ''} </div> ${photosHtml ? `<div class="timeline-photos">${photosHtml}</div>` : ''} `;
+                item.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <strong style="color: var(--primary-color);">${date}</strong>
+                        <span>${window.formatWeight(entry.weight_kg)}</span>
+                    </div>
+                    <div style="font-size: 0.9em; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; color: var(--secondary-text);">
+                        ${entry.chest_cm ? `<span>Chest: ${entry.chest_cm}cm</span>` : ''}
+                        ${entry.waist_cm ? `<span>Waist: ${entry.waist_cm}cm</span>` : ''}
+                        ${entry.arms_cm ? `<span>Arms: ${entry.arms_cm}cm</span>` : ''}
+                        ${entry.thighs_cm ? `<span>Thighs: ${entry.thighs_cm}cm</span>` : ''}
+                    </div>
+                    ${photosHtml ? `<div class="timeline-photos">${photosHtml}</div>` : ''}
+                `;
                 container.appendChild(item);
             });
         }
