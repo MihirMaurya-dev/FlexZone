@@ -77,7 +77,14 @@ function isLoggedIn(): bool {
 
 function requireLogin(): void {
     if (!isLoggedIn()) {
-        sendJsonResponse('error', null, 'Authentication required. Please log in.');
+        header("Location: ../index.php");
+        exit;
+    }
+}
+
+function requireApiAuth(): void {
+    if (!isLoggedIn()) {
+        sendJsonResponse('error', null, 'Authentication required');
     }
 }
 
@@ -88,7 +95,7 @@ function getCurrentUserId(): ?int {
 function getRequiredUserId(): int {
     $userId = getCurrentUserId();
     if (!$userId) {
-        sendJsonResponse('error', null, 'Authentication required');
+        requireApiAuth();
     }
     return $userId;
 }
