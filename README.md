@@ -7,7 +7,7 @@
 [![PHP Version](https://img.shields.io/badge/PHP-%5E8.0-777bb4.svg?style=flat&logo=php)](https://www.php.net/)
 [![JS Standard](https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e.svg?style=flat&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
+
 
 > **A high-performance, minimalist fitness ecosystem.**  
 > Built for those who want a zero-friction training experience—no bloat, just pure progress. Designed with a **Mobile-First** approach and a clean **Neumorphic/Glassmorphism** aesthetic.
