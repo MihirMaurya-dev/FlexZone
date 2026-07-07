@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             setupDailyChallenge(profileData.profile.challenge_data);
             setupHydrationTracker(profileData.profile.hydration_data);
+            checkWorkoutReminders();
         }
     }).catch(error => {
         if (error.message !== 'User not logged in') {
@@ -174,6 +175,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.innerHTML = `<p class="recent-name">No recent activity</p><p class="recent-details">Time to get moving!</p>`;
             }
         }).catch(() => {});
+    }
+    
+    function checkWorkoutReminders() {
+        if (!sessionStorage.getItem('reminder_shown')) {
+            window.apiFetch('../php/api/user/check_reminders.php').then(data => {
+                if (data.status === 'success' && data.remind) {
+                    setTimeout(() => {
+                        window.showMessage("🔔 " + data.message, 'success', 8000);
+                        sessionStorage.setItem('reminder_shown', 'true');
+                    }, 1500);
+                }
+            }).catch(() => {});
+        }
     }
 
     function loadDailyQuote() {

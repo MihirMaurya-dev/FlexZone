@@ -101,3 +101,4 @@
 - [x] Rate Limiting implemented on login endpoint (IP-based, 15min lockout)
 - [x] Dashboard time filters (Last 7 Days, Last 30 Days, All Time) implemented
 - [x] Progressive Overload Tracker (1RM estimation & chart for main lifts)
+- [x] Workout Reminders/Notifications (In-app alerts for inactivity)
