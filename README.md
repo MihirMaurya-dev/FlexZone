@@ -1,13 +1,22 @@
-# FlexZone 🏋️‍♂️ 
+<div align="center">
+
+# 🏋️‍♂️ FlexZone
 ### Track. Train. Transform.
 
-[![PHP Version](https://img.shields.io/badge/php-%5E8.0-777bb4.svg?style=flat-square&logo=php)](https://www.php.net/)
-[![JS Standard](https://img.shields.io/badge/javascript-ES6%2B-f7df1e.svg?style=flat-square&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+![Views](https://komarev.com/ghpvc/?username=MihirMaurya-dev-FlexZone&label=Views&color=777bb4&style=flat)
+[![PHP Version](https://img.shields.io/badge/PHP-%5E8.0-777bb4.svg?style=flat&logo=php)](https://www.php.net/)
+[![JS Standard](https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e.svg?style=flat&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
 
-FlexZone is a high-performance, minimalist fitness ecosystem. It's built for those who want a zero-friction training experience—no bloat, just pure progress. Designed with a **Mobile-First** approach and a clean **Neumorphic/Glassmorphism** aesthetic.
+> **A high-performance, minimalist fitness ecosystem.**  
+> Built for those who want a zero-friction training experience—no bloat, just pure progress. Designed with a **Mobile-First** approach and a clean **Neumorphic/Glassmorphism** aesthetic.
 
-![FlexZone Banner](assets/about.png)
+<br>
+
+<img src="assets/about.png" alt="FlexZone Banner" width="100%">
+
+</div>
 
 ## 🚀 Why FlexZone?
 
