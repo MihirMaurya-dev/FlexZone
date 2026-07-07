@@ -100,3 +100,4 @@
 - [x] Global CSRF Token implementation for all API requests
 - [x] Rate Limiting implemented on login endpoint (IP-based, 15min lockout)
 - [x] Dashboard time filters (Last 7 Days, Last 30 Days, All Time) implemented
+- [x] Progressive Overload Tracker (1RM estimation & chart for main lifts)

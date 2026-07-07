@@ -14,8 +14,107 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadingText: 'Saving...'
             });
         });
+    const overloadForm = document.getElementById('overload-form');
+    if (overloadForm) {
+        overloadForm.addEventListener('submit', function(e) {
+            window.handleFormSubmit(e, '../php/api/user/save_overload.php', () => {
+                window.showMessage('Exercise logged!', 'success');
+                overloadForm.reset();
+                loadOverloadChart();
+            }, { loadingText: 'Logging...' });
+        });
     }
+
+    const overloadFilter = document.getElementById('overload-filter');
+    if (overloadFilter) {
+        overloadFilter.addEventListener('change', loadOverloadChart);
+    }
+    
+    setTimeout(loadOverloadChart, 500);
 });
+
+let overloadChartInstance = null;
+
+function loadOverloadChart() {
+    const filterEl = document.getElementById('overload-filter');
+    const canvas = document.getElementById('overloadChart');
+    if (!filterEl || !canvas) return;
+    
+    const exercise = filterEl.value;
+    
+    window.apiFetch(`../php/api/user/get_overload.php?exercise=${encodeURIComponent(exercise)}`)
+        .then(data => {
+            if (data.status === 'success') {
+                const history = data.history || [];
+                
+                if (history.length === 0) {
+                    canvas.style.display = 'none';
+                    if (overloadChartInstance) overloadChartInstance.destroy();
+                    let msg = canvas.parentNode.querySelector('.chart-error-message');
+                    if (!msg) {
+                        msg = document.createElement('div');
+                        msg.className = 'chart-error-message';
+                        msg.style.textAlign = 'center';
+                        msg.style.padding = '20px';
+                        canvas.parentNode.appendChild(msg);
+                    }
+                    msg.textContent = `No data for ${exercise} yet. Log your first set!`;
+                    return;
+                }
+                
+                canvas.style.display = 'block';
+                const msg = canvas.parentNode.querySelector('.chart-error-message');
+                if (msg) msg.remove();
+
+                const labels = history.map(item => new Date(item.log_date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}));
+                const rmData = history.map(item => item.estimated_1rm);
+                const actualData = history.map(item => item.weight);
+
+                const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim() || '#3B82F6';
+                const secondaryColor = '#10B981';
+
+                if (overloadChartInstance) overloadChartInstance.destroy();
+                
+                if (typeof Chart === 'undefined') return;
+
+                overloadChartInstance = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Estimated 1RM',
+                                data: rmData,
+                                borderColor: primaryColor,
+                                backgroundColor: primaryColor + '20',
+                                fill: true,
+                                tension: 0.2
+                            },
+                            {
+                                label: 'Actual Weight',
+                                data: actualData,
+                                borderColor: secondaryColor,
+                                borderDash: [5, 5],
+                                fill: false,
+                                tension: 0
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            y: { beginAtZero: false }
+                        }
+                    }
+                });
+            }
+        });
+}
 
 function loadProgressHistory() {
     const container = document.getElementById('progress-timeline');

@@ -116,8 +116,58 @@ include '../includes/header.php';
         <!-- History Timeline -->
         <div class="main-card">
             <h2>History</h2>
-            <div id="progress-timeline" style="margin-top: 15px;">
+            <div id="progress-timeline" style="margin-top: 15px; max-height: 400px; overflow-y: auto;">
                 <p style="text-align: center; color: var(--secondary-text);">Loading history...</p>
+            </div>
+        </div>
+    </div>
+    
+    <h1 style="margin: 30px 0 20px;">Progressive Overload Tracker</h1>
+    <div class="progress-grid">
+        <!-- Log Exercise Form -->
+        <div class="main-card">
+            <h2>Log 1RM / Volume</h2>
+            <form id="overload-form">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Exercise</label>
+                    <select name="exercise_name" class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--body-bg); color: var(--text-color);" required>
+                        <option value="Bench Press">Bench Press</option>
+                        <option value="Squat">Squat</option>
+                        <option value="Deadlift">Deadlift</option>
+                        <option value="Overhead Press">Overhead Press</option>
+                        <option value="Barbell Row">Barbell Row</option>
+                        <option value="Pull-up">Pull-up (Weighted)</option>
+                    </select>
+                </div>
+                <div class="progress-form-inner" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Weight (kg/lbs)</label>
+                        <input type="number" step="0.1" name="weight" required class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--body-bg); color: var(--text-color);">
+                    </div>
+                    <div class="form-group">
+                        <label>Reps</label>
+                        <input type="number" name="reps" required class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--body-bg); color: var(--text-color);">
+                    </div>
+                </div>
+                <button type="submit" class="start-btn" style="position: static; margin-top: 20px;">Log Exercise</button>
+            </form>
+        </div>
+
+        <!-- Overload History/Chart -->
+        <div class="main-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;">Estimated 1RM</h2>
+                <select id="overload-filter" class="form-input" style="width: auto; padding: 6px 12px; margin: 0; height: auto;">
+                    <option value="Bench Press">Bench Press</option>
+                    <option value="Squat">Squat</option>
+                    <option value="Deadlift">Deadlift</option>
+                    <option value="Overhead Press">Overhead Press</option>
+                    <option value="Barbell Row">Barbell Row</option>
+                    <option value="Pull-up">Pull-up</option>
+                </select>
+            </div>
+            <div style="position: relative; height: 250px; width: 100%;">
+                <canvas id="overloadChart"></canvas>
             </div>
         </div>
     </div>
