@@ -49,6 +49,7 @@ function loadProfileData() {
     window.apiFetch('../php/api/user/get_profile_full.php').then(data => {
         if (data.status === 'success') {
             updateHeaderStats(data.user, data.stats);
+            updateHealthMetrics(data.user);
             renderHeatmap(data.activity);
             renderBadges(data.badges);
             if (data.garage && Array.isArray(data.garage)) {
@@ -77,6 +78,50 @@ function updateHeaderStats(user, stats) {
     }
     document.getElementById('total-workouts').textContent = stats.total_workouts || 0;
     document.getElementById('last-workout-date').textContent = stats.last_workout || '--';
+}
+
+function updateHealthMetrics(user) {
+    if (!user.height_cm || !user.weight_kg || !user.dob) return;
+
+    // BMI
+    const heightM = user.height_cm / 100;
+    const bmi = user.weight_kg / (heightM * heightM);
+    
+    let category = '';
+    let color = '';
+    if (bmi < 18.5) { category = 'Underweight'; color = '#F59E0B'; }
+    else if (bmi < 24.9) { category = 'Normal'; color = '#10B981'; }
+    else if (bmi < 29.9) { category = 'Overweight'; color = '#F59E0B'; }
+    else { category = 'Obese'; color = '#EF4444'; }
+
+    const bmiVal = document.getElementById('bmi-val');
+    if (bmiVal) bmiVal.textContent = bmi.toFixed(1);
+    
+    const catEl = document.getElementById('bmi-category');
+    if (catEl) {
+        catEl.textContent = `(${category})`;
+        catEl.style.color = color;
+    }
+
+    // TDEE (Mifflin-St Jeor)
+    const birthYear = new Date(user.dob).getFullYear();
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - birthYear;
+
+    let bmr;
+    if (user.gender === 'female') {
+        bmr = (10 * user.weight_kg) + (6.25 * user.height_cm) - (5 * age) - 161;
+    } else {
+        bmr = (10 * user.weight_kg) + (6.25 * user.height_cm) - (5 * age) + 5;
+    }
+
+    let multiplier = 1.2; // sedentary
+    if (user.activity_level === 'moderate') multiplier = 1.55;
+    else if (user.activity_level === 'active') multiplier = 1.725;
+
+    const tdee = Math.round(bmr * multiplier);
+    const tdeeVal = document.getElementById('tdee-val');
+    if (tdeeVal) tdeeVal.textContent = tdee;
 }
 
 function renderHeatmap(activity) {

@@ -96,3 +96,4 @@
 - [x] Workout Player Progress Bar implemented (segmented visual track + counter)
 - [x] Workout Player Keyboard Shortcuts (Arrows for Next/Prev, Space for Pause)
 - [x] Mobile Swipe Gestures and Haptic Feedback added to workout player
+- [x] BMI & Health Metrics (TDEE, BMI, Calorie calculations based on profile)

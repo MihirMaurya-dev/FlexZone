@@ -62,6 +62,29 @@ include '../includes/header.php';
             <div class="heatmap-container" id="activity-heatmap"></div>
         </section>
 
+        <section id="health" class="card">
+            <h2>Health Metrics</h2>
+            <div class="stats-header">
+                <div class="stat-box">
+                    <div class="icon-bg" style="background-color: var(--card-bg); color: #10B981;"><i class='bx bx-body'></i></div>
+                    <div class="stat-info">
+                        <h3>BMI</h3>
+                        <p><span id="bmi-val">--</span> <span style="font-size:0.8em;" id="bmi-category">()</span></p>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="icon-bg fire"><i class='bx bxs-hot'></i></div>
+                    <div class="stat-info">
+                        <h3>TDEE</h3>
+                        <p><span id="tdee-val">--</span> kcal</p>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.9em; color: var(--secondary-text);">
+                <strong>TDEE (Total Daily Energy Expenditure)</strong> is an estimate of how many calories you burn per day based on your body profile and activity level.
+            </p>
+        </section>
+
         <section id="weight" class="card">
             <h2>Log Weight</h2>
             <form id="weight-form" onsubmit="logWeight(event)">

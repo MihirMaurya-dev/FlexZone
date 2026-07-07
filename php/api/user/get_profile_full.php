@@ -16,6 +16,7 @@ $response = [
 
 try {
     $sql = "SELECT u.username, u.email, u.avatar, u.garage, u.settings, u.streak_current, u.streak_max, 
+            u.height_cm, u.weight_kg, u.dob, u.gender, u.activity_level,
             (SELECT COUNT(*) FROM workout_log WHERE user_id = u.id) as true_total 
             FROM users u WHERE u.id = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
@@ -29,7 +30,12 @@ try {
         $response['user'] = [
             'username' => $userData['username'],
             'email' => $userData['email'],
-            'avatar' => $userData['avatar'] ?? 'default_avatar.png'
+            'avatar' => $userData['avatar'] ?? 'default_avatar.png',
+            'height_cm' => $userData['height_cm'],
+            'weight_kg' => $userData['weight_kg'],
+            'dob' => $userData['dob'],
+            'gender' => $userData['gender'],
+            'activity_level' => $userData['activity_level']
         ];
         $response['stats'] = [
             'streak_current' => (int)($userData['streak_current'] ?? 0),
