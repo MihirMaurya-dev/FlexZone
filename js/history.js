@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         btn.addEventListener('click', (e) => {
                             const workout = e.currentTarget.getAttribute('data-workout');
                             const mins = e.currentTarget.getAttribute('data-mins');
-                            const text = \`I just completed a \${mins}-min \${workout} 🔥 #FlexZone\`;
+                            const text = `I just completed a ${mins}-min ${workout} 🔥 #FlexZone`;
                             if (navigator.share) {
                                 navigator.share({ title: 'FlexZone Workout', text: text, url: window.location.origin });
                             } else {
