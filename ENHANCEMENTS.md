@@ -100,3 +100,7 @@ All code quality issues and bugs have been resolved!
 - [x] Workout Reminders/Notifications (In-app alerts for inactivity)
 - [x] Hydration and Daily Challenge data synced to server to persist across devices
 - [x] Unified `total_workouts` stat across Profile and Leaderboard to use live `workout_log` counts
+- [x] Add `<meta name="description">` to all pages for SEO
+- [x] Add `loading="lazy"` to exercise images/videos in the workout preview
+- [x] Show `streak_max` (all-time best streak) on the profile page alongside current streak
+- [x] On the History page, show total time and calories **summed at the bottom** of the table

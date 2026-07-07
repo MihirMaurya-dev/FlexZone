@@ -65,6 +65,7 @@ include '../includes/header.php';
                         </td>
                     </tr>
                 </tbody>
+                <tfoot id="history-foot"></tfoot>
             </table>
         </div>
         

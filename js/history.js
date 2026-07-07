@@ -72,9 +72,12 @@ document.addEventListener('DOMContentLoaded', function() {
         historyBody.innerHTML = '<tr><td colspan="4" style="text-align:center;"><div class="spinner"></div> Loading...</td></tr>';
 
         window.apiFetch(url).then(data => {
+            const historyFoot = document.getElementById('history-foot');
             if (data.status === "success") {
                 historyBody.innerHTML = '';
                 if (data.history.length > 0) {
+                    let totalMins = 0;
+                    let totalKcal = 0;
                     data.history.forEach(log => {
                         const row = document.createElement('tr');
                         const formattedDate = new Date(log.log_date.replace(' ', 'T') + 'Z').toLocaleDateString('en-GB', {
@@ -82,16 +85,32 @@ document.addEventListener('DOMContentLoaded', function() {
                             month: 'long',
                             year: 'numeric'
                         });
+                        const mins = log.duration_seconds / 60;
+                        const kcal = log.calories_burned || 0;
+                        totalMins += mins;
+                        totalKcal += parseInt(kcal);
+                        
                         row.innerHTML = `
                             <td>${formattedDate}</td>
                             <td>${log.workout_name || 'Workout'}</td>
-                            <td>${(log.duration_seconds / 60).toFixed(2)}</td>
-                            <td>${log.calories_burned || 0}</td>
+                            <td>${mins.toFixed(2)}</td>
+                            <td>${kcal}</td>
                         `;
                         historyBody.appendChild(row);
                     });
+                    
+                    if (historyFoot) {
+                        historyFoot.innerHTML = `
+                            <tr style="font-weight: bold; background: var(--card-bg); border-top: 2px solid var(--border-color);">
+                                <td colspan="2" style="text-align: right; border-bottom: none;">Page Total:</td>
+                                <td style="border-bottom: none; color: var(--primary-color);">${totalMins.toFixed(0)} min</td>
+                                <td style="border-bottom: none; color: var(--primary-color);">${totalKcal} kcal</td>
+                            </tr>
+                        `;
+                    }
                 } else {
                     historyBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No workouts found for these filters.</td></tr>';
+                    if (historyFoot) historyFoot.innerHTML = '';
                 }
 
                 // Update pagination
@@ -102,9 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } else {
                 historyBody.innerHTML = `<tr><td colspan="4">Error loading history: ${data.message || 'Unknown error'}</td></tr>`;
+                if (historyFoot) historyFoot.innerHTML = '';
             }
         }).catch(() => {
             historyBody.innerHTML = '<tr><td colspan="4">An error occurred while loading your history. Please try again later.</td></tr>';
+            const historyFoot = document.getElementById('history-foot');
+            if (historyFoot) historyFoot.innerHTML = '';
         });
     }
 
