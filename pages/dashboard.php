@@ -7,7 +7,14 @@ include '../includes/header.php';
 ?>
 
 <main class="dashboard">
-    <h1 style="margin-bottom: 24px; font-size: 1.5rem;">Your Progress</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="margin: 0; font-size: 1.5rem;">Your Progress</h1>
+        <select id="dashboard-time-filter" class="form-input" style="width: auto; padding: 6px 12px; margin: 0; height: auto;">
+            <option value="all">All Time</option>
+            <option value="30">Last 30 Days</option>
+            <option value="7">Last 7 Days</option>
+        </select>
+    </div>
 
     <div class="stats-container" style="margin-bottom: 30px;">
         <div class="stat-card card-gradient-indigo">

@@ -7,6 +7,14 @@ $userId = getRequiredUserId();
 $range = isset($_GET['range']) ? (int)$_GET['range'] : 7;
 if (!in_array($range, [7, 30, 90])) $range = 7;
 
+$filter = $_GET['filter'] ?? 'all';
+$filterCondition = "";
+if ($filter === '7') {
+    $filterCondition = " AND log_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+} elseif ($filter === '30') {
+    $filterCondition = " AND log_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+}
+
 try {
     // Combine Total and Weekly stats into one query
     $statsSql = "
@@ -16,7 +24,7 @@ try {
             COUNT(log_id) as total_workouts,
             COALESCE(SUM(CASE WHEN YEARWEEK(log_date, 1) = YEARWEEK(CURDATE(), 1) THEN 1 ELSE 0 END), 0) as workouts_this_week
         FROM workout_log 
-        WHERE user_id = ?
+        WHERE user_id = ? $filterCondition
     ";
     
     $stmt = $conn->prepare($statsSql);

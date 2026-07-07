@@ -39,8 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const timeFilterEl = document.getElementById('dashboard-time-filter');
+
     function loadActivityStats(range = 7) {
-        window.apiFetch(`../php/api/user/get_user_stats.php?range=${range}`)
+        const filter = timeFilterEl ? timeFilterEl.value : 'all';
+        window.apiFetch(`../php/api/user/get_user_stats.php?range=${range}&filter=${filter}`)
             .then(data => {
                 if (data.status === 'success') {
                     updateStatsText(data);
@@ -134,6 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadActivityStats(7);
+
+    if (timeFilterEl) {
+        timeFilterEl.addEventListener('change', () => {
+            const activeToggle = document.querySelector('#activity-chart-toggles .toggle-btn.active');
+            const range = activeToggle ? parseInt(activeToggle.getAttribute('data-range')) : 7;
+            loadActivityStats(range);
+        });
+    }
 
     // Setup toggles
     const toggleBtns = document.querySelectorAll('#activity-chart-toggles .toggle-btn');
