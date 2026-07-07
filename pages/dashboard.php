@@ -29,7 +29,14 @@ include '../includes/header.php';
     </div>
 
     <div class="main-card card-gradient-blue">
-        <h2>Weekly Activity</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Activity</h2>
+            <div class="chart-toggles" id="activity-chart-toggles">
+                <button class="toggle-btn active" data-range="7">7D</button>
+                <button class="toggle-btn" data-range="30">30D</button>
+                <button class="toggle-btn" data-range="90">3M</button>
+            </div>
+        </div>
         <div style="position: relative; height: 300px; width: 100%;">
             <canvas id="activityChart"></canvas>
         </div>

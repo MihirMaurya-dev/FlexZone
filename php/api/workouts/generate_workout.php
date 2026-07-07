@@ -80,7 +80,13 @@ final class WorkoutGenerator {
 
     private function fetchRandom(string $baseSql, array $criteria, int $limit): array {
         $params = []; $types = ''; $clauses = [];
+        $equipmentFilter = null;
+        
         foreach ($criteria as $field => $value) {
+            if ($field === 'equipment') {
+                $equipmentFilter = $value;
+                continue;
+            }
             if (is_array($value)) {
                 $placeholders = implode(',', array_fill(0, count($value), '?'));
                 $clauses[] = "$field IN ($placeholders)";
@@ -90,9 +96,51 @@ final class WorkoutGenerator {
                 $params[] = $value; $types .= $this->paramType($value);
             }
         }
-        $sql = $baseSql . ($clauses ? ' WHERE ' . implode(' AND ', $clauses) : '') . ' ORDER BY RAND() LIMIT ?';
-        $params[] = $limit; $types .= 'i';
-        return $this->executeFetch($sql, $params, $types);
+        
+        // Step 1: Fetch only IDs (and equipment if filtering is needed)
+        $idCols = $equipmentFilter !== null ? "id, equipment" : "id";
+        $idSql = "SELECT $idCols FROM exercises" . ($clauses ? ' WHERE ' . implode(' AND ', $clauses) : '');
+        $rows = $this->executeFetch($idSql, $params, $types);
+        
+        if (empty($rows)) return [];
+        
+        // Step 2: Apply equipment filtering in PHP if required
+        if ($equipmentFilter !== null) {
+            $available = array_map(function($item) {
+                $item = trim($item);
+                if (strcasecmp($item, 'Dumbbell') === 0) return 'Dumbbells';
+                return $item;
+            }, $equipmentFilter);
+            if (!in_array('None', $available, true)) {
+                $available[] = 'None';
+            }
+            
+            $filtered = array_filter($rows, function($row) use ($available) {
+                $req = array_map('trim', explode(',', $row['equipment'] ?? 'None'));
+                foreach ($req as $r) {
+                    if (!in_array($r, $available, true)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            $rows = array_values($filtered);
+        }
+        
+        if (empty($rows)) return [];
+        
+        // Step 3: Pick random IDs
+        $validIds = array_column($rows, 'id');
+        shuffle($validIds);
+        $selectedIds = array_slice($validIds, 0, $limit);
+        
+        // Step 4: Fetch full exercise data for selected IDs
+        $placeholders = implode(',', array_fill(0, count($selectedIds), '?'));
+        $finalSql = self::BASE_SELECT . " WHERE id IN ($placeholders)";
+        $finalParams = $selectedIds;
+        $finalTypes = str_repeat('i', count($selectedIds));
+        
+        return $this->executeFetch($finalSql, $finalParams, $finalTypes);
     }
 
     private function assignExecutionDetails(array $exercises, string $difficulty, bool $isCustom = false): array {

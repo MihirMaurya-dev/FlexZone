@@ -29,9 +29,10 @@ try {
 
         // Update Streaks and Award Badges
         try {
-            $statsSql = "SELECT streak_current, streak_max, total_workouts, 
+            $statsSql = "SELECT u.streak_current, u.streak_max, 
+                        (SELECT COUNT(*) FROM workout_log WHERE user_id = u.id) as true_total,
                         (SELECT DATE(log_date) FROM workout_log WHERE user_id = ? AND log_id != ? ORDER BY log_date DESC LIMIT 1) as last_date 
-                        FROM users WHERE id = ?";
+                        FROM users u WHERE u.id = ?";
             $statsStmt = $conn->prepare($statsSql);
             $statsStmt->bind_param("iii", $userId, $workoutId, $userId);
             $statsStmt->execute();
@@ -39,7 +40,7 @@ try {
             
             if ($statsRow) {
                 $currentStreak = (int)$statsRow['streak_current'];
-                $totalWorkouts = (int)$statsRow['total_workouts'] + 1;
+                $totalWorkouts = (int)$statsRow['true_total'];
                 $lastDate = $statsRow['last_date'];
                 
                 $today = date('Y-m-d');
@@ -48,7 +49,11 @@ try {
                 $newStreak = ($lastDate === $yesterday) ? $currentStreak + 1 : ($lastDate === $today ? $currentStreak : 1);
                 $newMaxStreak = max($newStreak, (int)$statsRow['streak_max']);
 
-                $conn->query("UPDATE users SET streak_current = $newStreak, streak_max = $newMaxStreak, total_workouts = $totalWorkouts WHERE id = $userId");
+                $updateSql = "UPDATE users SET streak_current = ?, streak_max = ? WHERE id = ?";
+                $updateStmt = $conn->prepare($updateSql);
+                $updateStmt->bind_param("iii", $newStreak, $newMaxStreak, $userId);
+                $updateStmt->execute();
+                $updateStmt->close();
 
                 // Badge Logic
                 if ($totalWorkouts === 1) awardBadge($conn, $userId, 'first_workout');

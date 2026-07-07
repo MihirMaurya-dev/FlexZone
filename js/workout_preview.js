@@ -14,22 +14,31 @@ document.addEventListener('DOMContentLoaded', function() {
         startBtn.disabled = true;
         return;
     }
+
+    // Build a unique plan key so workout.js loads the exact same exercise list
+    let planKey = `workout_plan_${workoutType}`;
     let fetchUrl = `../php/api/workouts/generate_workout.php?type=${encodeURIComponent(workoutType)}`;
     let workoutPlayerUrl = `workout.php?type=${encodeURIComponent(workoutType)}`;
     if (workoutType === 'custom') {
         if (muscleGroup) {
             fetchUrl += `&muscle=${encodeURIComponent(muscleGroup)}`;
             workoutPlayerUrl += `&muscle=${encodeURIComponent(muscleGroup)}`;
+            planKey += `_${muscleGroup}`;
         }
         if (duration) {
             fetchUrl += `&duration=${encodeURIComponent(duration)}`;
             workoutPlayerUrl += `&duration=${encodeURIComponent(duration)}`;
+            planKey += `_${duration}`;
         }
         if (equipment) {
             fetchUrl += `&equipment=${encodeURIComponent(equipment)}`;
             workoutPlayerUrl += `&equipment=${encodeURIComponent(equipment)}`;
+            planKey += `_${equipment.replace(/,/g,'+')}`.substring(0, 80);
         }
     }
+    // Pass the plan key to workout.php so it knows exactly which sessionStorage entry to load
+    workoutPlayerUrl += `&planKey=${encodeURIComponent(planKey)}`;
+
     const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
     const displayType = workoutType === 'custom' ? (muscleGroup || 'Custom') : workoutType;
     titleEl.textContent = `${capitalize(displayType)} Workout`.replace(/_/g, ' ');
@@ -49,12 +58,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const durationOrReps = exercise.duration_seconds ? `${exercise.duration_seconds} sec` : `${exercise.reps || 10} reps`;
                 const visualSrc = window.getAvatarPath(exercise.image_url).replace('default_avatar.png', 'exercises/placeholder.png');
                 const isVideo = visualSrc.endsWith('.mp4') || visualSrc.endsWith('.webm');
-                exerciseCard.innerHTML = isVideo ? ` <video src="${visualSrc}" class="exercise-visual-thumb" autoplay loop muted playsinline onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"></video><img src="../assets/exercises/placeholder.png" class="exercise-visual-thumb" style="display:none;"> ` : ` <img src="${visualSrc}" class="exercise-visual-thumb" onerror="this.src='../assets/exercises/placeholder.png';"> `;
+                exerciseCard.innerHTML = isVideo ? `<video src="${visualSrc}" class="exercise-visual-thumb" autoplay loop muted playsinline loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"></video><img src="../assets/exercises/placeholder.png" loading="lazy" class="exercise-visual-thumb" style="display:none;">` : `<img src="${visualSrc}" loading="lazy" class="exercise-visual-thumb" onerror="this.src='../assets/exercises/placeholder.png';">`;
                 exerciseCard.innerHTML += ` <div class="exercise-info"> <h3>${exercise.exercise_name}</h3> <p>${durationOrReps}${exercise.equipment && exercise.equipment !== 'None' ? ` (${exercise.equipment})` : ''}</p> </div> `;
                 listEl.appendChild(exerciseCard);
             });
             startBtn.disabled = false;
-            startBtn.onclick = () => window.location.href = workoutPlayerUrl;
+            startBtn.onclick = () => {
+                // Clear any old plans first, then save this exact plan under its unique key
+                sessionStorage.removeItem('active_workout_plan');
+                sessionStorage.setItem(planKey, JSON.stringify(exercises));
+                window.location.href = workoutPlayerUrl;
+            };
         } else {
             titleEl.textContent = "No Workout Found";
             detailsEl.textContent = data.message || "Could not generate a workout. Try adjusting filters.";

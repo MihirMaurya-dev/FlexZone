@@ -112,6 +112,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             htmlEl.classList.remove('dark');
         }
+        
+        if (localStorage.getItem('theme_oled') === 'true') {
+            htmlEl.classList.add('theme-oled');
+        } else {
+            htmlEl.classList.remove('theme-oled');
+        }
     };
 
     if (toggleSwitch) {
@@ -135,12 +141,21 @@ document.addEventListener('DOMContentLoaded', function() {
     if (toggleSwitch) {
         toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
-                applyTheme('dark');
                 localStorage.setItem('theme', 'dark');
+                applyTheme('dark');
             } else {
-                applyTheme('light');
                 localStorage.setItem('theme', 'light');
+                applyTheme('light');
             }
+        });
+    }
+
+    const oledToggle = document.getElementById('oled-variant-toggle');
+    if (oledToggle) {
+        oledToggle.checked = (localStorage.getItem('theme_oled') === 'true');
+        oledToggle.addEventListener('change', function() {
+            localStorage.setItem('theme_oled', this.checked ? 'true' : 'false');
+            applyTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
         });
     }
 

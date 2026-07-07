@@ -3,9 +3,9 @@ if (!isset($basePath)) {
     $basePath = '../';
 }
 ?>
-<script src="<?php echo $basePath; ?>js/theme.js?v=1.3"></script>
+<script src="<?php echo $basePath; ?>js/theme.js?v=1.4"></script>
 <?php if (isset($activePage) && file_exists(__DIR__ . "/../js/{$activePage}.js")): ?>
-    <script src="<?php echo $basePath; ?>js/<?php echo $activePage; ?>.js?v=1.5"></script>
+    <script src="<?php echo $basePath; ?>js/<?php echo $activePage; ?>.js?v=1.8"></script>
 <?php endif; ?>
 
 <?php if ($activePage === 'home'): ?>

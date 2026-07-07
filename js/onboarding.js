@@ -71,3 +71,48 @@ function finishOnboarding() {
         loadingText: 'Saving...'
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const heightInput = document.getElementById('height');
+    const weightInput = document.getElementById('weight');
+    const bmiDisplay = document.getElementById('bmi-display');
+
+    function calculateBMI() {
+        const height = parseFloat(heightInput.value);
+        const weight = parseFloat(weightInput.value);
+
+        if (height > 0 && weight > 0) {
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            let category = '';
+            let color = '';
+
+            if (bmi < 18.5) {
+                category = 'Underweight';
+                color = '#F59E0B'; // yellow
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = 'Normal weight';
+                color = '#10B981'; // green
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = 'Overweight';
+                color = '#F59E0B'; // yellow
+            } else {
+                category = 'Obese';
+                color = '#EF4444'; // red
+            }
+
+            bmiDisplay.style.display = 'block';
+            bmiDisplay.style.backgroundColor = color + '20'; // 20% opacity
+            bmiDisplay.style.color = color;
+            bmiDisplay.style.border = `1px solid ${color}50`;
+            bmiDisplay.innerHTML = `Your BMI: <strong>${bmi.toFixed(1)}</strong> (${category})`;
+        } else {
+            bmiDisplay.style.display = 'none';
+        }
+    }
+
+    if (heightInput && weightInput) {
+        heightInput.addEventListener('input', calculateBMI);
+        weightInput.addEventListener('input', calculateBMI);
+    }
+});

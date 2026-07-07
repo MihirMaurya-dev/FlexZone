@@ -39,89 +39,112 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    window.apiFetch('../php/api/user/get_user_stats.php')
-        .then(data => {
-            if (data.status === 'success') {
-                updateStatsText(data);
-                if (typeof Chart !== 'undefined' && data.stats.last_7_days?.length > 0) {
-                    const activityLabels = data.stats.last_7_days.map(day => {
-                        const date = new Date(day.date + 'T00:00:00');
-                        return date.toLocaleDateString('en-GB', {
-                            day: 'numeric',
-                            month: 'short'
+    function loadActivityStats(range = 7) {
+        window.apiFetch(`../php/api/user/get_user_stats.php?range=${range}`)
+            .then(data => {
+                if (data.status === 'success') {
+                    updateStatsText(data);
+                    const actData = data.stats.activity_data || data.stats.last_7_days; // fallback to old key if backend not updated somehow
+                    if (typeof Chart !== 'undefined' && actData?.length > 0) {
+                        const activityLabels = actData.map(day => {
+                            const date = new Date(day.date + 'T00:00:00');
+                            return date.toLocaleDateString('en-GB', {
+                                day: 'numeric',
+                                month: 'short'
+                            });
                         });
-                    });
-                    const activityData = data.stats.last_7_days.map(day => Math.round(day.duration / 60));
-                    if (activityChartCanvas) {
-                        if (activityChartInstance) activityChartInstance.destroy();
-                        const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim() || '#3B82F6';
-                        const { secondaryText, borderColor } = getChartStyles();
-                        activityChartInstance = new Chart(activityChartCanvas.getContext('2d'), {
-                            type: 'bar',
-                            data: {
-                                labels: activityLabels,
-                                datasets: [{
-                                    label: 'Workout Time (Minutes)',
-                                    data: activityData,
-                                    backgroundColor: primaryColor + '99',
-                                    borderColor: primaryColor,
-                                    borderWidth: 1,
-                                    borderRadius: 5
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: secondaryText,
-                                            callback: v => v + ' min'
+                        const activityData = actData.map(day => Math.round(day.duration / 60));
+                        if (activityChartCanvas) {
+                            if (activityChartInstance) activityChartInstance.destroy();
+                            const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim() || '#3B82F6';
+                            const { secondaryText, borderColor } = getChartStyles();
+                            activityChartInstance = new Chart(activityChartCanvas.getContext('2d'), {
+                                type: 'bar',
+                                data: {
+                                    labels: activityLabels,
+                                    datasets: [{
+                                        label: 'Workout Time (Minutes)',
+                                        data: activityData,
+                                        backgroundColor: primaryColor + '99',
+                                        borderColor: primaryColor,
+                                        borderWidth: 1,
+                                        borderRadius: 5
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                color: secondaryText,
+                                                callback: v => v + ' min'
+                                            },
+                                            grid: {
+                                                color: borderColor
+                                            }
                                         },
-                                        grid: {
-                                            color: borderColor
+                                        x: {
+                                            ticks: {
+                                                color: secondaryText
+                                            },
+                                            grid: {
+                                                display: false
+                                            }
                                         }
                                     },
-                                    x: {
-                                        ticks: {
-                                            color: secondaryText
-                                        },
-                                        grid: {
+                                    plugins: {
+                                        legend: {
                                             display: false
                                         }
                                     }
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: false
-                                    }
                                 }
-                            }
-                        });
-                        activityChartCanvas.style.display = 'block';
+                            });
+                            activityChartCanvas.style.display = 'block';
+                            
+                            // Remove any old error messages
+                            const oldMsg = activityChartCanvas.parentNode.querySelector('.chart-error-message');
+                            if (oldMsg) oldMsg.remove();
+                        }
+                    } else if (activityChartCanvas) {
+                        activityChartCanvas.style.display = 'none';
+                        if (activityChartInstance) {
+                            activityChartInstance.destroy();
+                            activityChartInstance = null;
+                        }
+                        const existingMsg = activityChartCanvas.parentNode.querySelector('.chart-error-message');
+                        if (existingMsg) {
+                            existingMsg.textContent = `No workout activity recorded in the last ${range} days.`;
+                        } else {
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = 'chart-error-message';
+                            msgDiv.textContent = `No workout activity recorded in the last ${range} days.`;
+                            activityChartCanvas.parentNode.appendChild(msgDiv);
+                        }
                     }
-                } else if (activityChartCanvas) {
-                    activityChartCanvas.style.display = 'none';
-                    if (activityChartInstance) {
-                        activityChartInstance.destroy();
-                        activityChartInstance = null;
-                    }
-                    if (!activityChartCanvas.parentNode.querySelector('.chart-error-message')) {
-                        const msgDiv = document.createElement('div');
-                        msgDiv.className = 'chart-error-message';
-                        msgDiv.textContent = 'No workout activity recorded in the last 7 days.';
-                        activityChartCanvas.parentNode.appendChild(msgDiv);
-                    }
+                } else {
+                    setErrorText();
                 }
-            } else {
+            })
+            .catch(err => {
+                console.error('Dashboard Stats Error:', err);
                 setErrorText();
-            }
-        })
-        .catch(err => {
-            console.error('Dashboard Stats Error:', err);
-            setErrorText();
+            });
+    }
+
+    loadActivityStats(7);
+
+    // Setup toggles
+    const toggleBtns = document.querySelectorAll('#activity-chart-toggles .toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            const range = parseInt(e.currentTarget.getAttribute('data-range'));
+            loadActivityStats(range);
         });
+    });
 
     window.apiFetch('../php/api/user/get_weight_history.php')
         .then(data => {

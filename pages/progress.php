@@ -116,7 +116,7 @@ include '../includes/header.php';
         <!-- History Timeline -->
         <div class="main-card">
             <h2>History</h2>
-            <div id="progress-timeline" style="margin-top: 15px; max-height: 600px; overflow-y: auto;">
+            <div id="progress-timeline" style="margin-top: 15px;">
                 <p style="text-align: center; color: var(--secondary-text);">Loading history...</p>
             </div>
         </div>

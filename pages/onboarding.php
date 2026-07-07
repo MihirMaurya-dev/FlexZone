@@ -18,11 +18,11 @@ include '../includes/header.php';
         <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <form id="onboardingForm">
+    <form id="onboardingForm" onsubmit="event.preventDefault();">
         <!-- Step 1: Basics -->
-        <div class="onboarding-step active" id="step1">
+        <div class="step active" id="step1">
             <h1>Let's get started</h1>
-            <p>Tell us a bit about yourself</p>
+            <p class="subtitle">Tell us a bit about yourself</p>
             <div class="form-group">
                 <label>Age</label>
                 <input type="number" name="age" id="age" placeholder="25" class="form-input" required>
@@ -32,14 +32,14 @@ include '../includes/header.php';
                 <div class="radio-group">
                     <label class="radio-card">
                         <input type="radio" name="gender" value="male" required>
-                        <span class="radio-content">
+                        <span class="card-content">
                             <i class='bx bx-male'></i>
                             <span>Male</span>
                         </span>
                     </label>
                     <label class="radio-card">
                         <input type="radio" name="gender" value="female">
-                        <span class="radio-content">
+                        <span class="card-content">
                             <i class='bx bx-female'></i>
                             <span>Female</span>
                         </span>
@@ -50,9 +50,9 @@ include '../includes/header.php';
         </div>
 
         <!-- Step 2: Body -->
-        <div class="onboarding-step" id="step2">
+        <div class="step" id="step2">
             <h1>Body Stats</h1>
-            <p>Your current measurements</p>
+            <p class="subtitle">Your current measurements</p>
             <div class="form-group">
                 <label>Height (cm)</label>
                 <div class="input-with-icon">
@@ -67,74 +67,78 @@ include '../includes/header.php';
                     <input type="number" name="weight_kg" id="weight" placeholder="70" class="form-input" required step="0.1">
                 </div>
             </div>
-            <div class="btn-group">
-                <button type="button" class="btn back-btn" onclick="prevStep(2)">Back</button>
+            
+            <div id="bmi-display" style="display: none; margin-bottom: 20px; padding: 12px; border-radius: 8px; text-align: center; font-weight: 500;">
+                <!-- BMI will be injected here -->
+            </div>
+            <div class="step-buttons">
+                <button type="button" class="btn prev-btn" onclick="prevStep(2)">Back</button>
                 <button type="button" class="btn next-btn" onclick="nextStep(2)">Continue</button>
             </div>
         </div>
 
         <!-- Step 3: Goal -->
-        <div class="onboarding-step" id="step3">
+        <div class="step" id="step3">
             <h1>Your Goal</h1>
-            <p>What do you want to achieve?</p>
+            <p class="subtitle">What do you want to achieve?</p>
             <div class="radio-group vertical">
                 <label class="radio-card">
                     <input type="radio" name="goal" value="lose_weight" required>
-                    <span class="radio-content">
+                    <span class="card-content">
                         <span class="title">Lose Weight</span>
                         <span class="desc">Burn fat and get leaner</span>
                     </span>
                 </label>
                 <label class="radio-card">
                     <input type="radio" name="goal" value="build_muscle">
-                    <span class="radio-content">
+                    <span class="card-content">
                         <span class="title">Build Muscle</span>
                         <span class="desc">Gain strength and mass</span>
                     </span>
                 </label>
                 <label class="radio-card">
                     <input type="radio" name="goal" value="general_fitness">
-                    <span class="radio-content">
+                    <span class="card-content">
                         <span class="title">General Fitness</span>
                         <span class="desc">Stay healthy and active</span>
                     </span>
                 </label>
             </div>
-            <div class="btn-group">
-                <button type="button" class="btn back-btn" onclick="prevStep(3)">Back</button>
+            <div class="step-buttons">
+                <button type="button" class="btn prev-btn" onclick="prevStep(3)">Back</button>
                 <button type="button" class="btn next-btn" onclick="nextStep(3)">Continue</button>
             </div>
         </div>
 
         <!-- Step 4: Activity -->
-        <div class="onboarding-step" id="step4">
+        <div class="step" id="step4">
             <h1>Activity Level</h1>
-            <p>How active are you daily?</p>
+            <p class="subtitle">How active are you daily?</p>
             <div class="radio-group vertical">
                 <label class="radio-card">
                     <input type="radio" name="activity" value="sedentary" required>
-                    <span class="radio-content">
+                    <span class="card-content">
                         <span class="title">Sedentary</span>
                         <span class="desc">Office job, little exercise</span>
                     </span>
                 </label>
                 <label class="radio-card">
                     <input type="radio" name="activity" value="moderate">
-                    <span class="radio-content">
+                    <span class="card-content">
                         <span class="title">Moderate</span>
                         <span class="desc">Exercise 3-4 times/week</span>
                     </span>
                 </label>
                 <label class="radio-card">
                     <input type="radio" name="activity" value="active">
-                    <span class="radio-content">
+                    <span class="card-content">
                         <span class="title">Very Active</span>
                         <span class="desc">Daily heavy exercise</span>
                     </span>
                 </label>
             </div>
-            <div class="btn-group">
-                <button type="button" class="btn back-btn" onclick="prevStep(4)">Back</button>
+            <div class="step-buttons">
+                <button type="button" class="btn prev-btn" onclick="prevStep(4)">Back</button>
                 <button type="button" class="btn finish-btn" onclick="finishOnboarding()">Finish</button>
             </div>
         </div>

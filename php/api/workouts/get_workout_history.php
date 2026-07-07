@@ -9,14 +9,36 @@ $page = isset($_GET['page']) ? max(1, sanitizeInput($_GET['page'], 'int')) : 1;
 $limit = isset($_GET['limit']) ? max(1, min(100, sanitizeInput($_GET['limit'], 'int'))) : 50;
 $offset = ($page - 1) * $limit;
 
+$filterDate = !empty($_GET['date']) ? sanitizeInput($_GET['date']) : null;
+$filterType = !empty($_GET['type']) ? sanitizeInput($_GET['type']) : null;
+
 try {
+    $whereClauses = ["user_id = ?"];
+    $params = [$userId];
+    $types = "i";
+
+    if ($filterDate) {
+        $whereClauses[] = "DATE(log_date) = ?";
+        $params[] = $filterDate;
+        $types .= "s";
+    }
+    
+    if ($filterType) {
+        // e.g. workout_name LIKE '%beginner%'
+        $whereClauses[] = "LOWER(workout_name) LIKE ?";
+        $params[] = "%" . strtolower($filterType) . "%";
+        $types .= "s";
+    }
+
+    $whereSql = implode(" AND ", $whereClauses);
+
     // Total count for pagination
-    $countSql = "SELECT COUNT(log_id) as total FROM workout_log WHERE user_id = ?";
+    $countSql = "SELECT COUNT(log_id) as total FROM workout_log WHERE $whereSql";
     $countStmt = $conn->prepare($countSql);
     $totalWorkouts = 0;
     
     if ($countStmt) {
-        $countStmt->bind_param("i", $userId);
+        $countStmt->bind_param($types, ...$params);
         $countStmt->execute();
         $totalWorkouts = (int)$countStmt->get_result()->fetch_assoc()['total'];
         $countStmt->close();
@@ -24,11 +46,17 @@ try {
 
     $sql = "SELECT log_id, workout_name, duration_seconds, calories_burned, log_date 
             FROM workout_log 
-            WHERE user_id = ? 
+            WHERE $whereSql 
             ORDER BY log_date DESC LIMIT ? OFFSET ?";
             
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iii", $userId, $limit, $offset);
+    
+    // Add limit and offset to params
+    $params[] = $limit;
+    $params[] = $offset;
+    $types .= "ii";
+    
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
     

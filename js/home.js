@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const startButtons = document.querySelectorAll('.workout-option');
     setupWorkoutButtons();
     updateDailySuggestion();
-    setupDailyChallenge();
-    setupHydrationTracker();
     loadRecentActivity();
     loadDailyQuote();
     loadWeeklyGoal();
@@ -17,8 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
             throw new Error('User not logged in');
         }
     }).then(profileData => {
-        if (profileData.status === 'success' && (!profileData.profile.weight_kg || !profileData.profile.height_cm)) {
-            window.location.href = 'onboarding.php';
+        if (profileData.status === 'success') {
+            if (!profileData.profile.weight_kg || !profileData.profile.height_cm) {
+                window.location.href = 'onboarding.php';
+                return;
+            }
+            setupDailyChallenge(profileData.profile.challenge_data);
+            setupHydrationTracker(profileData.profile.hydration_data);
         }
     }).catch(error => {
         if (error.message !== 'User not logged in') {
@@ -38,53 +41,118 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateDailySuggestion() {
         const greetingContainer = document.getElementById('greeting-container');
         if (!greetingContainer) return;
-        const days = ["Active Recovery • 20 Mins", "Chest & Triceps • 45 Mins", "Back & Biceps • 50 Mins", "Leg Day • 50 Mins", "Shoulders & Abs • 40 Mins", "Full Body Intensity • 60 Mins", "Cardio & Core • 30 Mins"];
-        greetingContainer.textContent = days[new Date().getDay()];
+
+        const defaultDays = ["Active Recovery • 20 Mins", "Chest & Triceps • 45 Mins", "Back & Biceps • 50 Mins", "Leg Day • 50 Mins", "Shoulders & Abs • 40 Mins", "Full Body Intensity • 60 Mins", "Cardio & Core • 30 Mins"];
+        const fallbackSuggestion = defaultDays[new Date().getDay()];
+
+        window.apiFetch('../php/api/workouts/get_workout_history.php?limit=1')
+            .then(data => {
+                if (data.status === 'success' && data.history && data.history.length > 0) {
+                    const lastWorkout = data.history[0].workout_name.toLowerCase();
+                    let suggestion = fallbackSuggestion;
+
+                    if (lastWorkout.includes('chest')) {
+                        suggestion = "Back & Biceps • 50 Mins";
+                    } else if (lastWorkout.includes('back')) {
+                        suggestion = "Leg Day • 50 Mins";
+                    } else if (lastWorkout.includes('leg')) {
+                        suggestion = "Chest & Triceps • 45 Mins";
+                    } else if (lastWorkout.includes('shoulder') || lastWorkout.includes('arm')) {
+                        suggestion = "Cardio & Core • 30 Mins";
+                    } else if (lastWorkout.includes('core') || lastWorkout.includes('abs')) {
+                        suggestion = "Full Body Intensity • 60 Mins";
+                    } else if (lastWorkout.includes('full body') || lastWorkout.includes('intensity')) {
+                        suggestion = "Active Recovery • 20 Mins";
+                    } else {
+                        // For generic "Beginner Workout" etc, suggest something random but complementary
+                        suggestion = "Try a Custom Workout • Target Weaknesses";
+                    }
+
+                    greetingContainer.textContent = suggestion;
+                } else {
+                    greetingContainer.textContent = fallbackSuggestion;
+                }
+            })
+            .catch(() => {
+                greetingContainer.textContent = fallbackSuggestion;
+            });
     }
 
-    function setupDailyChallenge() {
+    function setupDailyChallenge(serverDataJson) {
         const challengeText = document.getElementById('challenge-text');
         const challengeCheckbox = document.getElementById('challenge-checkbox');
         const challenges = ["Do 50 Pushups", "Hold a plank for 2 min", "Drink 3L of water", "Walk 10,000 steps", "No sugar for 24h", "Do 50 Squats", "Stretch for 15 min"];
         if (!challengeText || !challengeCheckbox) return;
         const today = new Date().toDateString();
-        const savedData = JSON.parse(localStorage.getItem('daily_challenge') || '{}');
+        
+        let savedData = JSON.parse(localStorage.getItem('daily_challenge') || '{}');
+        let serverData = {};
+        try { serverData = serverDataJson ? JSON.parse(serverDataJson) : {}; } catch(e){}
+        
+        if (serverData.date === today) {
+            savedData = serverData;
+        }
+
+        const syncData = (data) => {
+            localStorage.setItem('daily_challenge', JSON.stringify(data));
+            window.apiFetch('../php/api/user/sync_daily_data.php', {
+                method: 'POST',
+                body: JSON.stringify({ challenge_data: data })
+            }).catch(e => console.error("Sync error", e));
+        };
+
         if (savedData.date !== today) {
             const newData = {
                 date: today,
                 text: challenges[Math.floor(Math.random() * challenges.length)],
                 completed: false
             };
-            localStorage.setItem('daily_challenge', JSON.stringify(newData));
+            syncData(newData);
             challengeText.textContent = newData.text;
             challengeCheckbox.checked = false;
         } else {
             challengeText.textContent = savedData.text;
             challengeCheckbox.checked = savedData.completed;
+            localStorage.setItem('daily_challenge', JSON.stringify(savedData));
         }
+        
         challengeCheckbox.onchange = (e) => {
             const currentData = JSON.parse(localStorage.getItem('daily_challenge'));
             currentData.completed = e.target.checked;
-            localStorage.setItem('daily_challenge', JSON.stringify(currentData));
+            syncData(currentData);
         };
     }
 
-    function setupHydrationTracker() {
+    function setupHydrationTracker(serverDataJson) {
         const currentEl = document.getElementById('hydro-current');
         const plusBtn = document.getElementById('hydro-plus');
         const minusBtn = document.getElementById('hydro-minus');
         if (!currentEl) return;
         const today = new Date().toDateString();
-        const savedData = JSON.parse(localStorage.getItem('hydration_tracker') || '{}');
+        
+        let savedData = JSON.parse(localStorage.getItem('hydration_tracker') || '{}');
+        let serverData = {};
+        try { serverData = serverDataJson ? JSON.parse(serverDataJson) : {}; } catch(e){}
+        
+        if (serverData.date === today) {
+            savedData = serverData;
+        }
+
         let count = savedData.date === today ? (savedData.count || 0) : 0;
+        
         const updateDisplay = () => {
             currentEl.textContent = count;
-            localStorage.setItem('hydration_tracker', JSON.stringify({
-                date: today,
-                count: count
-            }));
+            const data = { date: today, count: count };
+            localStorage.setItem('hydration_tracker', JSON.stringify(data));
+            window.apiFetch('../php/api/user/sync_daily_data.php', {
+                method: 'POST',
+                body: JSON.stringify({ hydration_data: data })
+            }).catch(e => console.error("Sync error", e));
         };
-        updateDisplay();
+        
+        currentEl.textContent = count;
+        localStorage.setItem('hydration_tracker', JSON.stringify({ date: today, count: count }));
+        
         plusBtn.onclick = () => {
             if (count < 12) count++;
             updateDisplay();

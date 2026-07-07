@@ -6,7 +6,7 @@ $conn = getVerifiedConnection();
 $userId = getRequiredUserId();
 
 try {
-    $sql = "SELECT height_cm, weight_kg, dob, fitness_goal, created_at FROM users WHERE id = ? LIMIT 1";
+    $sql = "SELECT height_cm, weight_kg, dob, fitness_goal, created_at, hydration_data, challenge_data FROM users WHERE id = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {

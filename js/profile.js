@@ -72,6 +72,9 @@ function updateHeaderStats(user, stats) {
     document.getElementById('display-email').textContent = user.email || '';
     document.getElementById('user-avatar').src = window.getAvatarPath(user.avatar);
     document.getElementById('streak-count').textContent = stats.streak_current || 0;
+    if(document.getElementById('streak-max')) {
+        document.getElementById('streak-max').textContent = stats.streak_max || 0;
+    }
     document.getElementById('total-workouts').textContent = stats.total_workouts || 0;
     document.getElementById('last-workout-date').textContent = stats.last_workout || '--';
 }

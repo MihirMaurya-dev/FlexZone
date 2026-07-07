@@ -4,6 +4,8 @@ require_once '../../config/db_connection.php';
 
 $conn = getVerifiedConnection();
 $userId = getRequiredUserId();
+$range = isset($_GET['range']) ? (int)$_GET['range'] : 7;
+if (!in_array($range, [7, 30, 90])) $range = 7;
 
 try {
     // Combine Total and Weekly stats into one query
@@ -45,9 +47,10 @@ try {
     ];
     $weeklyGoal = $goals[strtolower($activityLevel)] ?? 5;
 
-    // Last 7 days activity
+    // Activity data for the selected range
     $dailyStats = [];
-    for ($i = 6; $i >= 0; $i--) {
+    $daysBack = $range - 1;
+    for ($i = $daysBack; $i >= 0; $i--) {
         $date = date('Y-m-d', strtotime("-$i days"));
         $dailyStats[$date] = [
             'date' => $date,
@@ -58,14 +61,14 @@ try {
     $dailySql = "
         SELECT DATE(log_date) as date, SUM(duration_seconds) as duration 
         FROM workout_log 
-        WHERE user_id = ? AND log_date >= CURDATE() - INTERVAL 6 DAY 
+        WHERE user_id = ? AND log_date >= CURDATE() - INTERVAL ? DAY 
         GROUP BY DATE(log_date) 
         ORDER BY DATE(log_date) ASC
     ";
     
     $stmt = $conn->prepare($dailySql);
     if ($stmt) {
-        $stmt->bind_param("i", $userId);
+        $stmt->bind_param("ii", $userId, $daysBack);
         $stmt->execute();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -82,7 +85,7 @@ try {
         'total_workouts' => (int)($combinedStats['total_workouts'] ?? 0),
         'workouts_this_week' => (int)($combinedStats['workouts_this_week'] ?? 0),
         'weekly_goal' => $weeklyGoal,
-        'last_7_days' => array_values($dailyStats)
+        'activity_data' => array_values($dailyStats)
     ];
 
     sendJsonResponse('success', ['stats' => $stats]);

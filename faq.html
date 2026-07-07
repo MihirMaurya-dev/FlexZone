@@ -14,45 +14,249 @@
     </script>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        .static-page { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
-        .static-page h1 { font-size: 2.5rem; margin-bottom: 24px; color: var(--primary-color); }
-        .back-link { display: inline-block; margin-bottom: 32px; color: var(--accent-color); font-weight: 500; }
-        .faq-item { margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 24px; }
-        .faq-question { font-size: 1.2rem; font-weight: 600; color: var(--text-color); margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-answer { color: var(--secondary-text); line-height: 1.6; display: none; }
-        .faq-item.active .faq-answer { display: block; }
-        .faq-icon { transition: transform 0.3s; }
-        .faq-item.active .faq-icon { transform: rotate(180deg); }
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+        }
+        .static-page { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 60px 24px; 
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .static-page h1 { 
+            font-size: 2.5rem; 
+            margin-top: 16px;
+            margin-bottom: 12px; 
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .static-page .subtitle {
+            color: var(--secondary-text);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .search-container {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-text);
+            font-size: 1.3rem;
+        }
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+        }
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+            transform: translateY(-1px);
+        }
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .faq-item { 
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(16px);
+        }
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .faq-question { 
+            font-size: 1.15rem; 
+            font-weight: 600; 
+            color: var(--text-color); 
+            padding: 24px;
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            user-select: none;
+            transition: color 0.2s ease;
+        }
+        .faq-item:hover .faq-question {
+            color: var(--primary-color);
+        }
+        .faq-answer { 
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--secondary-text); 
+            line-height: 1.6; 
+            padding: 0 24px;
+            font-size: 0.95rem;
+            border-top: 1px solid transparent;
+        }
+        .faq-item.active {
+            border-color: rgba(249, 115, 22, 0.5);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(249, 115, 22, 0.03) 100%);
+        }
+        .faq-item.active .faq-answer { 
+            max-height: 300px;
+            padding: 20px 24px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+        .faq-icon { 
+            font-size: 1.4rem;
+            color: var(--secondary-text);
+            transition: transform 0.3s, color 0.3s; 
+        }
+        .faq-item.active .faq-icon { 
+            transform: rotate(180deg); 
+            color: var(--primary-color);
+        }
+        .back-btn-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        .theme-switch-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 8px 12px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(16px);
+        }
     </style>
 </head>
 <body>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round"></div>
+        </label>
+        <span style="font-size: 0.85rem; font-weight: 500;">Dark Mode</span>
+    </div>
+
     <div class="static-page">
-        <a href="index.php" class="back-link">&larr; Back to Home</a>
-        <h1>Frequently Asked Questions</h1>
-        <div class="faq-item">
-            <div class="faq-question">Is FlexZone free to use? <span class="faq-icon">▼</span></div>
-            <div class="faq-answer">Yes! FlexZone allows you to track your workouts, view history, and use basic features for free.</div>
+        <div class="back-btn-container">
+            <a href="index.php" class="ghost-btn">
+                <i class='bx bx-arrow-back'></i> Back to Home
+            </a>
         </div>
-        <div class="faq-item">
-            <div class="faq-question">How do I create a custom workout? <span class="faq-icon">▼</span></div>
-            <div class="faq-answer">Navigate to the Home page and select "Custom" from the Quick Actions menu. You can then specify muscle groups, duration, and equipment.</div>
+        
+        <div class="header-section">
+            <h1>Frequently Asked Questions</h1>
+            <p class="subtitle">Find answers to common questions about FlexZone</p>
         </div>
-        <div class="faq-item">
-            <div class="faq-question">Can I export my data? <span class="faq-icon">▼</span></div>
-            <div class="faq-answer">Yes, go to your Profile page, scroll to the Settings section, and click "Export Workout History" to download a CSV file of your logs.</div>
+
+        <div class="search-container">
+            <i class='bx bx-search'></i>
+            <input type="text" id="faq-search" class="search-input" placeholder="Search questions or keywords...">
         </div>
-        <div class="faq-item">
-            <div class="faq-question">How do I change my profile picture? <span class="faq-icon">▼</span></div>
-            <div class="faq-answer">On your Profile page, click the camera icon next to your avatar to upload a new photo.</div>
+
+        <div class="faq-list" id="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is FlexZone free to use?</span>
+                    <i class='bx bx-chevron-down faq-icon'></i>
+                </div>
+                <div class="faq-answer">
+                    Yes! FlexZone is built on a free tier model that allows you to track your workouts, view history, and use custom workout features for free without any hidden costs.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I create a custom workout?</span>
+                    <i class='bx bx-chevron-down faq-icon'></i>
+                </div>
+                <div class="faq-answer">
+                    Navigate to the Home page and click "Custom" under Quick Actions. There, you can input your target muscle group, duration, and the equipment you have available to instantly generate a tailored routine.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I export my data?</span>
+                    <i class='bx bx-chevron-down faq-icon'></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, you fully own your fitness data. Go to your Profile page and select "Export Data" from the sidebar. A CSV containing your complete workout log history will download immediately.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I change my profile picture?</span>
+                    <i class='bx bx-chevron-down faq-icon'></i>
+                </div>
+                <div class="faq-answer">
+                    On your Profile page, click the camera icon on your avatar. Choose any image file from your device, and it will automatically crop and upload as your new profile picture.
+                </div>
+            </div>
         </div>
     </div>
+    
     <script src="js/theme.js"></script>
     <script>
+        // Toggle FAQ open/close
         document.querySelectorAll('.faq-question').forEach(item => {
             item.addEventListener('click', () => {
                 const parent = item.parentElement;
-                parent.classList.toggle('active');
+                const isActive = parent.classList.contains('active');
+                
+                // Close other open FAQs for a clean accordion effect
+                document.querySelectorAll('.faq-item').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                if (!isActive) {
+                    parent.classList.add('active');
+                }
+            });
+        });
+
+        // Search feature
+        const searchInput = document.getElementById('faq-search');
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            faqItems.forEach(item => {
+                const questionText = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answerText = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (questionText.includes(query) || answerText.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
             });
         });
     </script>

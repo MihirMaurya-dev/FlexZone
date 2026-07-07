@@ -25,19 +25,24 @@ if ($weight !== null && ($weight < 20 || $weight > 300)) {
     sendJsonResponse('error', null, 'Invalid weight');
 }
 
-try {
-    // If age is provided but DOB isn't in DB, we can estimate DOB or just ignore if schema only has DOB
-    // For now, let's update what we have in the schema
-    $sql = "UPDATE users SET 
+    // Calculate DOB if age is provided
+    $dob = null;
+    if ($age !== null && $age > 0) {
+        $dob = (intval(date('Y')) - $age) . '-01-01';
+    }
+
+    try {
+        $sql = "UPDATE users SET 
                 height_cm = COALESCE(?, height_cm), 
                 weight_kg = COALESCE(?, weight_kg), 
                 fitness_goal = COALESCE(?, fitness_goal), 
                 gender = COALESCE(?, gender), 
-                activity_level = COALESCE(?, activity_level) 
+                activity_level = COALESCE(?, activity_level),
+                dob = COALESCE(?, dob)
             WHERE id = ?";
             
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ddsssi", $height, $weight, $goal, $gender, $activityLevel, $userId);
+    $stmt->bind_param("ddssssi", $height, $weight, $goal, $gender, $activityLevel, $dob, $userId);
     
     if ($stmt->execute()) {
         $stmt->close();

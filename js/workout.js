@@ -17,6 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
       exitBtn: document.getElementById('exit-btn'),
       repeatBtn: document.getElementById('repeat-btn'),
       addRestBtn: document.getElementById('add-rest-btn')
+    },
+    progress: {
+      track: document.getElementById('step-progress-track'),
+      current: document.getElementById('step-current'),
+      total: document.getElementById('step-total'),
+      elapsed: document.getElementById('workout-elapsed')
+    },
+    modal: {
+      overlay: document.getElementById('exit-modal-overlay'),
+      statSteps: document.getElementById('exit-stat-steps'),
+      statTime: document.getElementById('exit-stat-time'),
+      cancelBtn: document.getElementById('exit-modal-cancel'),
+      confirmBtn: document.getElementById('exit-modal-confirm')
     }
   };
   
@@ -24,12 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
     executionPlan: [],
     currentStepIndex: 0,
     timerInterval: null,
+    elapsedInterval: null,
+    elapsedSeconds: 0,
     timeLeft: 0,
     isPaused: false,
     totalWorkoutTimeSeconds: 0,
     totalCaloriesBurned: 0,
     userWeightKg: 70,
-    workoutType: 'beginner'
+    workoutType: 'beginner',
+    planKey: null
   };
 
   async function init() {
@@ -40,18 +56,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const urlParams = new URLSearchParams(window.location.search);
       state.workoutType = urlParams.get('type') || 'beginner';
-      let fetchUrl = `../php/api/workouts/generate_workout.php?type=${encodeURIComponent(state.workoutType)}`;
-      ['muscle', 'duration', 'equipment'].forEach(p => { if (urlParams.get(p)) fetchUrl += `&${p}=${encodeURIComponent(urlParams.get(p))}`; });
+      state.planKey = urlParams.get('planKey') || null;
 
-      const data = await window.apiFetch(fetchUrl);
-      if (data?.status === 'success' && data.workout?.length > 0) {
-        state.executionPlan = [];
-        data.workout.forEach((ex, i) => {
-          state.executionPlan.push(ex);
-          if (i < data.workout.length - 1) state.executionPlan.push({ type: 'rest', duration_seconds: 30 });
-        });
-        loadStep();
-      } else throw new Error(data.message || "No exercises found.");
+      let workout = null;
+      // Try the typed key first (set by workout_preview.js)
+      if (state.planKey) {
+        const saved = sessionStorage.getItem(state.planKey);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) workout = parsed;
+          } catch(e) { console.error('Plan parse error:', e); }
+        }
+      }
+      // Legacy fallback: old generic key (keeps backward compat)
+      if (!workout) {
+        const saved = sessionStorage.getItem('active_workout_plan');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) workout = parsed;
+          } catch(e) { console.error('Plan parse error:', e); }
+        }
+      }
+
+      if (!workout) {
+        let fetchUrl = `../php/api/workouts/generate_workout.php?type=${encodeURIComponent(state.workoutType)}`;
+        ['muscle', 'duration', 'equipment'].forEach(p => { if (urlParams.get(p)) fetchUrl += `&${p}=${encodeURIComponent(urlParams.get(p))}`; });
+
+        const data = await window.apiFetch(fetchUrl);
+        if (data?.status === 'success' && data.workout?.length > 0) {
+          workout = data.workout;
+        } else {
+          throw new Error(data?.message || "No exercises found.");
+        }
+      }
+
+      state.executionPlan = [];
+      workout.forEach((ex, i) => {
+        state.executionPlan.push(ex);
+        if (i < workout.length - 1) {
+          state.executionPlan.push({ type: 'rest', duration_seconds: ex.rest_seconds || 30 });
+        }
+      });
+      buildProgressSegments();
+      startElapsedTimer();
+      loadStep();
     } catch (error) {
       handleWorkoutError("Unable to load workout plan. Please try again.<br><button onclick='window.location.reload()' class='btn btn-primary' style='margin-top: 15px;'>Retry</button>");
     }
@@ -70,6 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     UIElements.nav.prevBtn.disabled = (state.currentStepIndex === 0);
     UIElements.nav.nextBtn.textContent = (state.currentStepIndex === state.executionPlan.length - 1) ? 'Finish' : 'Next';
+
+    updateProgressUI();
   }
 
   function loadExerciseStep(ex) {
@@ -131,6 +183,54 @@ document.addEventListener('DOMContentLoaded', function() {
   function goToPrevStep() { if (state.currentStepIndex > 0) { state.currentStepIndex--; loadStep(); } }
   function repeatCurrentExercise() { if (state.currentStepIndex > 0 && state.executionPlan[state.currentStepIndex].type === 'rest') state.currentStepIndex--; loadStep(); }
   function addRestTime() { state.timeLeft += 15; UIElements.restTimer.textContent = formatTime(state.timeLeft); }
+
+  /* ---- Progress Bar ---- */
+  function buildProgressSegments() {
+    const track = UIElements.progress.track;
+    if (!track) return;
+    track.innerHTML = '';
+    state.executionPlan.forEach((step, i) => {
+      const seg = document.createElement('div');
+      seg.classList.add('step-segment');
+      if (step.type === 'rest') seg.classList.add('rest');
+      seg.dataset.index = i;
+      track.appendChild(seg);
+    });
+    // Set total label to exercise count only (skip rest steps)
+    const exerciseCount = state.executionPlan.filter(s => s.type !== 'rest').length;
+    if (UIElements.progress.total) UIElements.progress.total.textContent = exerciseCount;
+  }
+
+  function updateProgressUI() {
+    const track = UIElements.progress.track;
+    if (!track) return;
+    const segments = track.querySelectorAll('.step-segment');
+    segments.forEach((seg, i) => {
+      seg.classList.remove('active', 'done');
+      if (i < state.currentStepIndex) seg.classList.add('done');
+      else if (i === state.currentStepIndex) seg.classList.add('active');
+    });
+    // Step counter shows exercise number (not rest)
+    const exerciseStepsBefore = state.executionPlan
+      .slice(0, state.currentStepIndex + 1)
+      .filter(s => s.type !== 'rest').length;
+    if (UIElements.progress.current) {
+      UIElements.progress.current.textContent = exerciseStepsBefore;
+    }
+  }
+
+  /* ---- Elapsed Timer ---- */
+  function startElapsedTimer() {
+    clearInterval(state.elapsedInterval);
+    state.elapsedInterval = setInterval(() => {
+      if (!state.isPaused) {
+        state.elapsedSeconds++;
+        if (UIElements.progress.elapsed) {
+          UIElements.progress.elapsed.textContent = formatTime(state.elapsedSeconds);
+        }
+      }
+    }, 1000);
+  }
   
   function togglePause() {
     state.isPaused = !state.isPaused;
@@ -138,10 +238,38 @@ document.addEventListener('DOMContentLoaded', function() {
     state.isPaused ? UIElements.visual.videoPlayer.pause() : UIElements.visual.videoPlayer.play().catch(() => {});
   }
 
-  function exitWorkout() { if (confirm('Exit? Progress will not be saved.')) window.location.href = 'home.php'; }
+  function openExitModal() {
+    const overlay = UIElements.modal.overlay;
+    if (!overlay) return;
+    // Populate live stats
+    const stepsDone = state.currentStepIndex;
+    if (UIElements.modal.statSteps) UIElements.modal.statSteps.textContent = stepsDone;
+    if (UIElements.modal.statTime)  UIElements.modal.statTime.textContent  = formatTime(state.elapsedSeconds);
+    overlay.classList.add('visible');
+    // Trap focus on the modal
+    setTimeout(() => { if (UIElements.modal.cancelBtn) UIElements.modal.cancelBtn.focus(); }, 50);
+  }
+
+  function closeExitModal() {
+    const overlay = UIElements.modal.overlay;
+    if (overlay) overlay.classList.remove('visible');
+  }
+
+  function confirmExit() {
+    clearInterval(state.elapsedInterval);
+    clearInterval(state.timerInterval);
+    if (state.planKey) sessionStorage.removeItem(state.planKey);
+    sessionStorage.removeItem('active_workout_plan');
+    window.location.href = 'home.php';
+  }
+
+  function exitWorkout() { openExitModal(); }
 
   function finishWorkout() {
     clearInterval(state.timerInterval);
+    clearInterval(state.elapsedInterval);
+    if (state.planKey) sessionStorage.removeItem(state.planKey);
+    sessionStorage.removeItem('active_workout_plan');
     UIElements.exerciseName.textContent = "Workout Complete! 🎉";
     UIElements.visual.container.innerHTML = '<div class="spinner"></div><p style="color: var(--secondary-text); margin-top: 10px;">Saving results...</p>';
     UIElements.nav.container.style.display = 'none';
@@ -149,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const workoutData = { 
         duration: state.totalWorkoutTimeSeconds, 
         calories: Math.round(state.totalCaloriesBurned), 
-        name: `${state.workoutType.charAt(0).toUpperCase() + state.workoutType.slice(1)} Workout` 
+        name: urlParams.get('muscle') ? `${urlParams.get('muscle')} Workout` : `${state.workoutType.charAt(0).toUpperCase() + state.workoutType.slice(1)} Workout` 
     };
 
     window.apiFetch('../php/api/workouts/save_workout.php', { 
@@ -210,12 +338,28 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function bindEventListeners() {
-    UIElements.nav.nextBtn.onclick = goToNextStep;
-    UIElements.nav.prevBtn.onclick = goToPrevStep;
-    UIElements.nav.repeatBtn.onclick = repeatCurrentExercise;
+    UIElements.nav.nextBtn.onclick    = goToNextStep;
+    UIElements.nav.prevBtn.onclick    = goToPrevStep;
+    UIElements.nav.repeatBtn.onclick  = repeatCurrentExercise;
     UIElements.nav.addRestBtn.onclick = addRestTime;
-    UIElements.nav.pauseBtn.onclick = togglePause;
-    UIElements.nav.exitBtn.onclick = exitWorkout;
+    UIElements.nav.pauseBtn.onclick   = togglePause;
+    UIElements.nav.exitBtn.onclick    = exitWorkout;
+
+    // Modal buttons
+    if (UIElements.modal.cancelBtn)  UIElements.modal.cancelBtn.onclick  = closeExitModal;
+    if (UIElements.modal.confirmBtn) UIElements.modal.confirmBtn.onclick = confirmExit;
+
+    // Close on overlay click (outside the card)
+    if (UIElements.modal.overlay) {
+      UIElements.modal.overlay.addEventListener('click', (e) => {
+        if (e.target === UIElements.modal.overlay) closeExitModal();
+      });
+    }
+
+    // Escape key closes the modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && UIElements.modal.overlay?.classList.contains('visible')) closeExitModal();
+    });
   }
   init();
 });

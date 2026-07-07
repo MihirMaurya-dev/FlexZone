@@ -23,10 +23,11 @@ include '../includes/header.php';
 
         <nav class="settings-nav">
             <a href="#activity" class="active"><i class='bx bx-grid-alt'></i> Activity</a>
+            <a href="history.php"><i class='bx bx-history'></i> Workout History</a>
             <a href="#badges"><i class='bx bx-medal'></i> Badges</a>
             <a href="#equipment"><i class='bx bx-dumbbell'></i> My Garage</a>
             <a href="#settings"><i class='bx bx-cog'></i> Settings</a>
-            <a href="#" onclick="exportData()"><i class='bx bx-download'></i> Export Data</a>
+            <a href="#" onclick="exportData()" title="Export Data"><i class='bx bx-download'></i></a>
             <a href="../help.html"><i class='bx bx-help-circle'></i> Help Center</a>
             <a href="../credits.html"><i class='bx bx-info-circle'></i> Credits</a>
         </nav>
@@ -40,7 +41,7 @@ include '../includes/header.php';
                     <div class="icon-bg fire"><i class='bx bxs-hot'></i></div>
                     <div class="stat-info">
                         <h3>Streak</h3>
-                        <p><span id="streak-count">0</span> Days</p>
+                        <p><span id="streak-count">0</span> Days <span style="font-size:0.8em; color:var(--secondary-text);">(Best: <span id="streak-max">0</span>)</span></p>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -101,6 +102,13 @@ include '../includes/header.php';
                         <div class="ball"></div>
                     </label>
                 </div>
+            </div>
+            
+            <div class="setting-group" style="padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <label class="checkbox-item" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="oled-variant-toggle">
+                    <span>Use #0A0A0A OLED Variant (Dark Mode)</span>
+                </label>
             </div>
 
             <form id="settings-form" onsubmit="saveSettings(event)">

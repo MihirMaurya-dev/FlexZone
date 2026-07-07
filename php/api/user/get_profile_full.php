@@ -15,7 +15,9 @@ $response = [
 ];
 
 try {
-    $sql = "SELECT username, email, avatar, garage, settings, streak_current, total_workouts FROM users WHERE id = ? LIMIT 1";
+    $sql = "SELECT u.username, u.email, u.avatar, u.garage, u.settings, u.streak_current, u.streak_max, 
+            (SELECT COUNT(*) FROM workout_log WHERE user_id = u.id) as true_total 
+            FROM users u WHERE u.id = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -31,20 +33,22 @@ try {
         ];
         $response['stats'] = [
             'streak_current' => (int)($userData['streak_current'] ?? 0),
-            'total_workouts' => (int)($userData['total_workouts'] ?? 0),
+            'streak_max' => (int)($userData['streak_max'] ?? 0),
+            'total_workouts' => (int)($userData['true_total'] ?? 0),
             'last_workout' => '--'
         ];
         $response['garage'] = $userData['garage'] ? json_decode($userData['garage']) : [];
         $response['settings'] = $userData['settings'] ? json_decode($userData['settings']) : ['units' => 'kg'];
     }
 
-    $lastWorkoutSql = "SELECT log_date FROM workout_log WHERE user_id = ? ORDER BY log_date DESC LIMIT 1";
+    $lastWorkoutSql = "SELECT log_date, workout_name FROM workout_log WHERE user_id = ? ORDER BY log_date DESC LIMIT 1";
     $lwStmt = $conn->prepare($lastWorkoutSql);
     $lwStmt->bind_param("i", $userId);
     $lwStmt->execute();
     $lwResult = $lwStmt->get_result();
     if ($row = $lwResult->fetch_assoc()) {
         $response['stats']['last_workout'] = date('M j, Y', strtotime($row['log_date']));
+        $response['stats']['last_workout_name'] = $row['workout_name'];
     }
     $lwStmt->close();
 

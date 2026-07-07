@@ -9,6 +9,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'FlexZone';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="<?php echo isset($pageDescription) ? htmlspecialchars($pageDescription) : 'FlexZone - Your all-in-one fitness companion for custom workouts, tracking, and daily challenges.'; ?>">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     
     <script>
@@ -22,7 +23,15 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'FlexZone';
     </script>
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="<?php echo $basePath; ?>css/style.css?v=1.2">
+    <link rel="stylesheet" href="<?php echo $basePath; ?>css/style.css?v=2.4">
+    
+    <!-- Page Specific CSS -->
+    <?php
+    $cssFile = __DIR__ . '/../css/' . $activePage . '.css';
+    if (file_exists($cssFile)) {
+        echo '<link rel="stylesheet" href="' . $basePath . 'css/' . $activePage . '.css?v=2.4">';
+    }
+    ?>
     
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
