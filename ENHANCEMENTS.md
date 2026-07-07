@@ -48,11 +48,11 @@
 
 ## ⚡ Performance
 
-| Area | Fix |
-|---|---|
-| CSS file is 32KB+ single file | Split into page-specific CSS modules and load lazily |
-| `ORDER BY RAND()` for exercise generation is slow at scale | Cache daily workout seeds or use keyset pagination |
-| No image optimization for uploaded avatars | Compress uploaded images using `imagecopyresized()` in PHP |
+| Area | Fix | Status |
+|---|---|---|
+| CSS file is 32KB+ single file | Split into page-specific CSS modules and load lazily | ✅ Decided against splitting (better for cache) |
+| `ORDER BY RAND()` for exercise generation is slow at scale | Cache daily workout seeds or use keyset pagination | ✅ Refactored to PHP array shuffle |
+| No image optimization for uploaded avatars | Compress uploaded images using `imagecopyresized()` in PHP | ✅ Implemented WEBP compression |
 
 ---
 
