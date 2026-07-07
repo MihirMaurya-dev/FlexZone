@@ -34,6 +34,12 @@ window.formatWeight = function(weightKg, units = null) {
 
 window.apiFetch = async function(url, options = {}) {
     try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (csrfToken) {
+            options.headers = options.headers || {};
+            options.headers['X-CSRF-Token'] = csrfToken;
+        }
+
         const response = await fetch(url, options);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         return await response.json();

@@ -97,3 +97,4 @@
 - [x] Workout Player Keyboard Shortcuts (Arrows for Next/Prev, Space for Pause)
 - [x] Mobile Swipe Gestures and Haptic Feedback added to workout player
 - [x] BMI & Health Metrics (TDEE, BMI, Calorie calculations based on profile)
+- [x] Global CSRF Token implementation for all API requests
