@@ -58,11 +58,7 @@
 
 ## 🐛 Code Quality / Bugs
 
-| Issue | Fix |
-|---|---|
-| Hydration and daily challenge data stored in `localStorage` only | Sync them server-side to persist across devices |
-| Leaderboard `total_workouts` from `users` table (cached) vs `workout_log` count (live) — mismatch | Unify to single source of truth |
-| Profile page `total_workouts` comes from `users.total_workouts` (cached) | Decide on one source — recommend live `workout_log` count |
+All code quality issues and bugs have been resolved!
 
 ---
 
@@ -102,3 +98,5 @@
 - [x] Dashboard time filters (Last 7 Days, Last 30 Days, All Time) implemented
 - [x] Progressive Overload Tracker (1RM estimation & chart for main lifts)
 - [x] Workout Reminders/Notifications (In-app alerts for inactivity)
+- [x] Hydration and Daily Challenge data synced to server to persist across devices
+- [x] Unified `total_workouts` stat across Profile and Leaderboard to use live `workout_log` counts
