@@ -33,10 +33,51 @@ include '../includes/header.php';
                 <h3>Advanced</h3>
                 <p>Mastery</p>
             </div>
-            <div class="workout-option card-gradient-orange" data-type="custom">
+            <div class="workout-option card-gradient-orange" data-type="custom_builder">
                 <i class='bx bx-dumbbell'></i>
                 <h3>Custom</h3>
                 <p>Build your own routine</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="workout-selector" style="margin-top: 30px;">
+        <h2>Targeted Workouts</h2>
+        <div class="options-container" style="flex-wrap: wrap; gap: 15px;">
+            <div class="workout-option card-gradient-cyan" data-type="custom_targeted" data-muscle="Full Body" data-duration="20" data-equipment="None" style="flex: 1 1 calc(33% - 15px); min-width: 140px;">
+                <i class='bx bxs-hot'></i>
+                <h3>HIIT</h3>
+                <p>High Intensity</p>
+            </div>
+            <div class="workout-option card-gradient-purple" data-type="custom_targeted" data-muscle="Full Body" data-equipment="Barbell,Dumbbell" style="flex: 1 1 calc(33% - 15px); min-width: 140px;">
+                <i class='bx bx-dumbbell'></i>
+                <h3>Powerlifting</h3>
+                <p>Heavy Lifts</p>
+            </div>
+            <div class="workout-option card-gradient-red" data-type="custom_targeted" data-muscle="Arms" style="flex: 1 1 calc(33% - 15px); min-width: 140px;">
+                <i class='bx bx-body'></i>
+                <h3>Arms</h3>
+                <p>Biceps & Triceps</p>
+            </div>
+            <div class="workout-option card-gradient-blue" data-type="custom_targeted" data-muscle="Back" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-accessibility'></i>
+                <h3>Back</h3>
+                <p>Lats & Traps</p>
+            </div>
+            <div class="workout-option card-gradient-green" data-type="custom_targeted" data-muscle="Core" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-layer'></i>
+                <h3>Abs & Core</h3>
+                <p>Six Pack</p>
+            </div>
+            <div class="workout-option card-gradient-orange" data-type="custom_targeted" data-muscle="Chest" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-stop-circle'></i>
+                <h3>Chest</h3>
+                <p>Pecs & Push</p>
+            </div>
+            <div class="workout-option card-gradient-pink" data-type="custom_targeted" data-muscle="Legs" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-walk'></i>
+                <h3>Legs</h3>
+                <p>Quads & Glutes</p>
             </div>
         </div>
     </div>

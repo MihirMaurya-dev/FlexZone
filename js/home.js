@@ -34,7 +34,19 @@ document.addEventListener('DOMContentLoaded', function() {
         startButtons.forEach(button => {
             button.onclick = (e) => {
                 const type = e.currentTarget.getAttribute('data-type');
-                window.location.href = type === 'custom' ? 'custom_workout.php' : `workout_preview.php?type=${encodeURIComponent(type)}`;
+                if (type === 'custom_builder') {
+                    window.location.href = 'custom_workout.php';
+                } else if (type === 'custom_targeted') {
+                    const muscle = e.currentTarget.getAttribute('data-muscle');
+                    const eq = e.currentTarget.getAttribute('data-equipment');
+                    const dur = e.currentTarget.getAttribute('data-duration') || '30';
+                    let url = `workout_preview.php?type=custom&duration=${dur}`;
+                    if(muscle) url += `&muscle=${encodeURIComponent(muscle)}`;
+                    if(eq) url += `&equipment=${encodeURIComponent(eq)}`;
+                    window.location.href = url;
+                } else {
+                    window.location.href = `workout_preview.php?type=${encodeURIComponent(type)}`;
+                }
             };
         });
     }
