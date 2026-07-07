@@ -79,6 +79,26 @@ include '../includes/header.php';
                 <h3>Legs</h3>
                 <p>Quads & Glutes</p>
             </div>
+            <div class="workout-option card-gradient-cyan" data-type="custom_targeted" data-muscle="Shoulders" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-target-lock'></i>
+                <h3>Shoulders</h3>
+                <p>Delts & Traps</p>
+            </div>
+            <div class="workout-option card-gradient-purple" data-type="custom_targeted" data-muscle="Full Body" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-male'></i>
+                <h3>Full Body</h3>
+                <p>Total Conditioning</p>
+            </div>
+            <div class="workout-option card-gradient-orange" data-type="custom_targeted" data-muscle="Full Body" data-equipment="None" style="flex: 1 1 calc(50% - 15px); min-width: 140px;">
+                <i class='bx bx-street-view'></i>
+                <h3>Bodyweight</h3>
+                <p>No Equipment</p>
+            </div>
+            <div class="workout-option card-gradient-red" data-type="custom_targeted" data-muscle="Full Body" data-category="Cardio" style="flex: 1 1 calc(100% - 15px); min-width: 140px;">
+                <i class='bx bx-run'></i>
+                <h3>Cardio</h3>
+                <p>Endurance & Stamina</p>
+            </div>
         </div>
     </div>
 
