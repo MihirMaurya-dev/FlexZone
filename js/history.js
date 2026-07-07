@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const historyBody = document.getElementById('history-body');
     const heatmapContainer = document.getElementById('calendar-heatmap');
+    const searchInput = document.getElementById('search-input');
     const filterDate = document.getElementById('filter-date');
     const filterType = document.getElementById('filter-type');
     const clearFiltersBtn = document.getElementById('clear-filters');
@@ -63,9 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadHistory() {
+        const searchVal = searchInput ? searchInput.value : '';
         const dateVal = filterDate.value;
         const typeVal = filterType.value;
         let url = `../php/api/workouts/get_workout_history.php?limit=${limit}&page=${currentPage}`;
+        if (searchVal) url += `&search=${encodeURIComponent(searchVal)}`;
         if (dateVal) url += `&date=${encodeURIComponent(dateVal)}`;
         if (typeVal) url += `&type=${encodeURIComponent(typeVal)}`;
 
@@ -94,9 +97,28 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td>${formattedDate}</td>
                             <td>${log.workout_name || 'Workout'}</td>
                             <td>${mins.toFixed(2)}</td>
-                            <td>${kcal}</td>
+                            <td style="display: flex; align-items: center; justify-content: space-between;">
+                                <span>${kcal}</span>
+                                <button class="ghost-btn share-btn" style="padding: 4px; display: inline-flex;" data-workout="${log.workout_name || 'Workout'}" data-mins="${mins.toFixed(0)}">
+                                    <i class='bx bx-share-alt'></i>
+                                </button>
+                            </td>
                         `;
                         historyBody.appendChild(row);
+                    });
+                    
+                    document.querySelectorAll('.share-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const workout = e.currentTarget.getAttribute('data-workout');
+                            const mins = e.currentTarget.getAttribute('data-mins');
+                            const text = \`I just completed a \${mins}-min \${workout} 🔥 #FlexZone\`;
+                            if (navigator.share) {
+                                navigator.share({ title: 'FlexZone Workout', text: text, url: window.location.origin });
+                            } else {
+                                navigator.clipboard.writeText(text);
+                                window.showMessage('Copied to clipboard!', 'success');
+                            }
+                        });
                     });
                     
                     if (historyFoot) {
@@ -131,11 +153,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event Listeners
+    if (searchInput) {
+        let debounceTimer;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => { currentPage = 1; loadHistory(); }, 400);
+        });
+    }
     if (filterDate) filterDate.addEventListener('change', () => { currentPage = 1; loadHistory(); });
     if (filterType) filterType.addEventListener('change', () => { currentPage = 1; loadHistory(); });
     
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
             filterDate.value = '';
             filterType.value = '';
             currentPage = 1;

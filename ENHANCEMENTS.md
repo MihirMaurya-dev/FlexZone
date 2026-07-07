@@ -16,21 +16,21 @@
 ## 🚀 Feature Gaps
 
 ### High Impact
-- **Push Notifications / Workout Reminders** — Currently the toggle is in settings but does nothing
-- **BMI & Health Metrics** — Calculate and display BMI, TDEE, and calorie targets from user profile data
-- **Workout Rest Timer Sound** — Play a beep/chime when rest is over
-- **Progressive Overload Tracker** — Let users track sets/reps/weight on specific exercises over time
+- [x] **Push Notifications / Workout Reminders** — Currently the toggle is in settings but does nothing
+- [x] **BMI & Health Metrics** — Calculate and display BMI, TDEE, and calorie targets from user profile data
+- [x] **Workout Rest Timer Sound** — Play a beep/chime when rest is over
+- [x] **Progressive Overload Tracker** — Let users track sets/reps/weight on specific exercises over time
 
 ### Medium Impact
-- **Social Sharing** — "I just completed a 45-min Intermediate Workout 🔥 #FlexZone" share card
+- [x] **Social Sharing** — "I just completed a 45-min Intermediate Workout 🔥 #FlexZone" share card
 - **Workout Plan Scheduling** — Let users schedule recurring workouts for specific days of the week
 - **Exercise Demo Videos** — Many exercises have `image_url` pointing to GIFs — ensure all exercises have media
 - **Body Measurement Comparison** — Side-by-side before/after measurements in the progress page
 
 ### Nice-to-Have
-- **Dark Mode OLED theme** — Pure black (`#000`) already exists but add an optional `#0A0A0A` OLED variant
-- **Search in History** — Filter workout logs by name or date range
-- **AI-based workout suggestion** — Based on streak, last session, and time of day
+- [x] **Dark Mode OLED theme** — Pure black (`#000`) already exists but add an optional `#0A0A0A` OLED variant
+- [x] **Search in History** — Filter workout logs by name or date range
+- [x] **AI-based workout suggestion** — Based on streak, last session, and time of day
 
 ---
 

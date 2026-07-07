@@ -11,6 +11,7 @@ $offset = ($page - 1) * $limit;
 
 $filterDate = !empty($_GET['date']) ? sanitizeInput($_GET['date']) : null;
 $filterType = !empty($_GET['type']) ? sanitizeInput($_GET['type']) : null;
+$searchQuery = !empty($_GET['search']) ? sanitizeInput($_GET['search']) : null;
 
 try {
     $whereClauses = ["user_id = ?"];
@@ -27,6 +28,12 @@ try {
         // e.g. workout_name LIKE '%beginner%'
         $whereClauses[] = "LOWER(workout_name) LIKE ?";
         $params[] = "%" . strtolower($filterType) . "%";
+        $types .= "s";
+    }
+
+    if ($searchQuery) {
+        $whereClauses[] = "LOWER(workout_name) LIKE ?";
+        $params[] = "%" . strtolower($searchQuery) . "%";
         $types .= "s";
     }
 

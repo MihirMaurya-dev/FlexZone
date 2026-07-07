@@ -33,6 +33,9 @@ include '../includes/header.php';
 
         <!-- Filters -->
         <div class="history-filters" style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+            <div class="form-group" style="margin: 0; flex: 2; min-width: 200px;">
+                <input type="text" id="search-input" class="form-input" placeholder="Search workouts..." style="padding: 8px 12px; height: auto;">
+            </div>
             <div class="form-group" style="margin: 0; flex: 1; min-width: 150px;">
                 <input type="date" id="filter-date" class="form-input" style="padding: 8px 12px; height: auto;">
             </div>

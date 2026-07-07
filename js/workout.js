@@ -48,6 +48,20 @@ document.addEventListener('DOMContentLoaded', function() {
     planKey: null
   };
 
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playBeep(freq = 800, duration = 0.3) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+  }
+
   async function init() {
     bindEventListeners();
     try {
@@ -174,8 +188,14 @@ document.addEventListener('DOMContentLoaded', function() {
           state.totalWorkoutTimeSeconds++;
           UIElements.metric.textContent = formatTime(state.timeLeft);
           calculateCalories();
-        } else UIElements.restTimer.textContent = formatTime(state.timeLeft);
-      } else if (mode !== 'manual') goToNextStep();
+        } else {
+          UIElements.restTimer.textContent = formatTime(state.timeLeft);
+          if (state.timeLeft > 0 && state.timeLeft <= 3) playBeep(600, 0.1); // short low beep
+        }
+      } else if (mode !== 'manual') {
+          if (mode === 'rest') playBeep(800, 0.4); // longer high beep when rest is over
+          goToNextStep();
+      }
     }, 1000);
   }
 
