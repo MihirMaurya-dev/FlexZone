@@ -3,11 +3,11 @@ declare(strict_types=1);
 if (!defined('FLEXZONE_APP')) {
     define('FLEXZONE_APP', true);
 }
-define('DB_HOST', '127.0.0.1');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'flexzone');
-define('DB_PORT', 3307);
+define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+define('DB_NAME', getenv('DB_NAME') ?: 'flexzone');
+define('DB_PORT', getenv('DB_PORT') ? (int)getenv('DB_PORT') : 3307);
 define('DB_CHARSET', 'utf8mb4');
 
 error_reporting(E_ALL);
