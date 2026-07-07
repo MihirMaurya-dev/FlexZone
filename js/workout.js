@@ -179,8 +179,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
   }
 
-  function goToNextStep() { state.currentStepIndex++; loadStep(); }
-  function goToPrevStep() { if (state.currentStepIndex > 0) { state.currentStepIndex--; loadStep(); } }
+  function triggerHaptic() { if (navigator.vibrate) navigator.vibrate(50); }
+
+  function goToNextStep() { triggerHaptic(); state.currentStepIndex++; loadStep(); }
+  function goToPrevStep() { if (state.currentStepIndex > 0) { triggerHaptic(); state.currentStepIndex--; loadStep(); } }
   function repeatCurrentExercise() { if (state.currentStepIndex > 0 && state.executionPlan[state.currentStepIndex].type === 'rest') state.currentStepIndex--; loadStep(); }
   function addRestTime() { state.timeLeft += 15; UIElements.restTimer.textContent = formatTime(state.timeLeft); }
 
@@ -356,10 +358,31 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Escape key closes the modal
+    // Keyboard Shortcuts (Arrow keys & Space) and Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && UIElements.modal.overlay?.classList.contains('visible')) closeExitModal();
+      if (UIElements.modal.overlay?.classList.contains('visible')) {
+        if (e.key === 'Escape') closeExitModal();
+        return;
+      }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goToNextStep(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); goToPrevStep(); }
+      else if (e.key === ' ') { e.preventDefault(); togglePause(); }
+      else if (e.key === 'Escape') exitWorkout();
     });
+
+    // Touch Swipe Gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const swipeArea = document.querySelector('.live-workout-container');
+    if (swipeArea) {
+      swipeArea.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+      swipeArea.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (diff < -50) goToNextStep();      // Swipe left -> Next
+        else if (diff > 50) goToPrevStep();  // Swipe right -> Prev
+      }, {passive: true});
+    }
   }
   init();
 });

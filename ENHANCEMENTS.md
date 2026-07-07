@@ -90,7 +90,9 @@
 - [x] Onboarding page CSS class mismatches resolved
 - [x] Age saved as DOB in the database during onboarding
 - [x] Custom workout equipment filtering works correctly (pluralization + multi-equipment support)
-- [x] Index page header made fully transparent (removed blur)
 - [x] Terms, Privacy, FAQ, Contact pages enhanced with modern design
 - [x] `save_workout.php` updated to use prepared statements (SQL injection mitigated)
 - [x] Database configuration updated to use environment variables for Azure compatibility
+- [x] Workout Player Progress Bar implemented (segmented visual track + counter)
+- [x] Workout Player Keyboard Shortcuts (Arrows for Next/Prev, Space for Pause)
+- [x] Mobile Swipe Gestures and Haptic Feedback added to workout player
