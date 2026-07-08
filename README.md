@@ -67,12 +67,71 @@ cd FlexZone
    define('DB_PORT', 3307); 
    ```
 
+## 🚀 Deployment Guide
+
+This project is built on a standard PHP and MySQL stack. Below are the instructions to deploy this application to a live server (such as InfinityFree, cPanel, or a VPS) and secure it using Cloudflare, managed via the **Antigravity CLI**.
+
+### 📋 Prerequisites
+
+Before deploying, ensure you have the following:
+*   A registered domain name pointing to Cloudflare nameservers.
+*   A hosting environment with PHP and MySQL support.
+*   **Antigravity CLI** installed on your local machine.
+*   Your exported database schema (`database.sql`).
+
+---
+
+### ⚙️ Step 1: Database Setup
+
+1. Log into your hosting Control Panel.
+2. Navigate to **MySQL Databases** and create a new database.
+3. Open **phpMyAdmin** and import your local `.sql` file to generate the required tables.
+4. Note your newly generated credentials: `DB_HOST`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD`.
+
+---
+
+### 🌐 Step 2: DNS & Cloudflare Configuration
+
+To route traffic properly and prevent proxy errors, configure your Cloudflare DNS settings:
+
+1. Delete any temporary `CNAME` verification records.
+2. Create the following **A Records**:
+   * **Type:** `A` | **Name:** `@` | **Target:** `YOUR_SERVER_IP` | **Proxy:** Proxied (Orange Cloud)
+   * **Type:** `A` | **Name:** `www` | **Target:** `YOUR_SERVER_IP` | **Proxy:** Proxied (Orange Cloud)
+3. Navigate to the **SSL/TLS** tab in Cloudflare and set the encryption mode to **Flexible** (if your origin server does not have a dedicated SSL certificate).
+
+---
+
+### 💻 Step 3: Configure Environment Variables
+
+Before using the CLI to push your files, update your database connection script to match your live server environment. 
+
+> **Warning:** Never commit production passwords directly to public GitHub repositories. Use environment variables or a `.gitignore` configuration file.
+
+```php
+<?php
+// Example database connection
+$host     = "YOUR_LIVE_DB_HOST";
+$username = "YOUR_LIVE_DB_USER";
+$password = "YOUR_LIVE_DB_PASSWORD";
+$database = "YOUR_LIVE_DB_NAME";
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$database;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+```
+
 ## 🗺️ Roadmap
-- [x] **Dynamic Units**: Instant kg/lbs conversion across all charts.
-- [x] **Theme Persistence**: Zero-flash theme loading.
+- [x] **Targeted Workouts**: 1-click generators for HIIT, Powerlifting, and specific muscle groups.
+- [x] **Rest Timer Audio Cues**: Web Audio API integration for interval beeps.
+- [x] **Social Sharing**: Native mobile sharing for completed workout logs.
+- [x] **Global CSRF Protection**: Complete API security overhaul.
 - [ ] **PWA Support**: Offline workout logging and home-screen installation.
 - [ ] **Push Notifications**: Service Worker integration for workout reminders.
-- [ ] **Social API**: Share custom workout "blueprints" with a single link.
 
 ## 🤝 Contributing
 Contributions are what make the open-source community an amazing place to learn, inspire, and create.
