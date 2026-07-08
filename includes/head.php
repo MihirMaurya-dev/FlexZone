@@ -13,6 +13,9 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'FlexZone';
     <meta name="csrf-token" content="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     
+    <link rel="icon" type="image/png" href="<?php echo $basePath; ?>icon.png">
+    <link rel="apple-touch-icon" href="<?php echo $basePath; ?>icon.png">
+    
     <script>
         const API_BASE = '<?php echo $basePath; ?>php/';
         (function() {
