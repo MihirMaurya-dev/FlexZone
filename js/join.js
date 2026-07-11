@@ -78,3 +78,12 @@ function handleRegister(event) {
         loadingText: 'Creating account...'
     });
 }
+
+// Check URL for register action immediately
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'register') {
+        // Use setTimeout to ensure DOM elements (slides) are fully parsed if this runs early
+        setTimeout(() => goToSlide(1), 0);
+    }
+})();

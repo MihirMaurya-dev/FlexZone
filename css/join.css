@@ -2,12 +2,18 @@
     --bg-color: #F8F9FA;
     --main-color: #111827;
     --hover-color: #374151;
+    --primary: #F97316;
+    --primary-rgb: 249, 115, 22;
+    --primary-gradient: linear-gradient(135deg, #F97316 0%, #F59E0B 100%);
 }
 
 html.dark {
     --bg-color: #000000;
     --main-color: #FFFFFF;
     --hover-color: #E5E7EB;
+    --primary: #FB923C;
+    --primary-rgb: 251, 146, 60;
+    --primary-gradient: linear-gradient(135deg, #FB923C 0%, #F59E0B 100%);
 }
 
 body {
@@ -81,7 +87,7 @@ body {
 
 input:checked+.slider {
     background-color:
-        var(--main-color);
+        var(--primary);
 }
 
 input:checked+.slider:before {
@@ -134,7 +140,10 @@ input:checked+.slider:before {
 
 .form-card h1 {
     font-size: 2rem;
-    color: var(--main-color);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
     margin-bottom: 10px;
 }
 
@@ -158,7 +167,7 @@ input:checked+.slider:before {
     transform:
         translateY(-50%);
     font-size: 1.2rem;
-    color: var(--main-color);
+    color: var(--primary);
     z-index: 1;
 }
 
@@ -177,8 +186,8 @@ input:checked+.slider:before {
 }
 
 .input-box input:focus {
-    border-color: var(--main-color);
-    box-shadow: 0 0 10px rgba(0, 212, 255,
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(var(--primary-rgb),
             0.3);
 }
 
@@ -205,13 +214,13 @@ input:checked+.slider:before {
 }
 
 .btn-primary {
-    background: var(--main-color);
-    color: var(--bg-color);
+    background: var(--primary-gradient);
+    color: white;
 }
 
 .btn-primary:hover {
-    background: var(--hover-color);
-    box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+    background: var(--primary-gradient);
+    box-shadow: 0 5px 20px rgba(var(--primary-rgb), 0.4);
     transform: translateY(-2px);
 }
 
@@ -227,15 +236,16 @@ input:checked+.slider:before {
 }
 
 .toggle-text a {
-    color: var(--main-color);
+    color: var(--primary);
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.3s;
+    transition: color 0.3s, opacity 0.3s;
 }
 
 .toggle-text a:hover {
     color:
-        var(--hover-color);
+        var(--primary);
+    opacity: 0.8;
     text-decoration: underline;
 }
 
@@ -261,7 +271,7 @@ input:checked+.slider:before {
 }
 
 .dot.active {
-    background: var(--main-color);
+    background: var(--primary);
     transform: scale(1.2);
 }
 

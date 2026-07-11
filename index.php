@@ -46,7 +46,7 @@ require_once 'includes/head.php';
         <p>Welcome to FlexZone — generate custom workouts, track every session, and watch your progress unfold with powerful analytics.</p>
 
         <div class="hero-cta-group">
-            <a href="pages/join.php" class="hero-btn">
+            <a href="pages/join.php?action=register" class="hero-btn">
                 <i class='bx bxs-rocket'></i> Get Started Free
             </a>
             <a href="#features" class="hero-btn-secondary">
@@ -125,7 +125,7 @@ require_once 'includes/head.php';
     <div class="parallax-stripe-content">
         <h2>Ready to Start Your Journey?</h2>
         <p>Join FlexZone today. No credit card, no commitment — just results.</p>
-        <a href="pages/join.php" class="hero-btn">
+        <a href="pages/join.php?action=register" class="hero-btn">
             <i class='bx bxs-user-plus'></i> Create Free Account
         </a>
     </div>
