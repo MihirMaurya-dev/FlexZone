@@ -1,19 +1,31 @@
 :root {
-    --bg-color: #F8F9FA;
+    --bg-color: #f8fafc;
     --main-color: #111827;
     --hover-color: #374151;
     --primary: #F97316;
     --primary-rgb: 249, 115, 22;
     --primary-gradient: linear-gradient(135deg, #F97316 0%, #F59E0B 100%);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --shadow-lg: 0 20px 40px -5px rgba(0,0,0,0.1);
+    --mesh-1: rgba(249, 115, 22, 0.3);
+    --mesh-2: rgba(245, 158, 11, 0.2);
+    --mesh-3: rgba(251, 146, 60, 0.4);
 }
 
 html.dark {
-    --bg-color: #000000;
+    --bg-color: #030712;
     --main-color: #FFFFFF;
     --hover-color: #E5E7EB;
     --primary: #FB923C;
     --primary-rgb: 251, 146, 60;
     --primary-gradient: linear-gradient(135deg, #FB923C 0%, #F59E0B 100%);
+    --glass-bg: rgba(17, 24, 39, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --shadow-lg: 0 20px 40px -5px rgba(0,0,0,0.5);
+    --mesh-1: rgba(249, 115, 22, 0.15);
+    --mesh-2: rgba(245, 158, 11, 0.1);
+    --mesh-3: rgba(251, 146, 60, 0.2);
 }
 
 body {
@@ -25,6 +37,29 @@ body {
     justify-content: center;
     transition: background 0.3s, color 0.3s;
     overflow: hidden;
+}
+
+/* Aurora Mesh Background */
+.aurora-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.aurora-bg .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 12s infinite ease-in-out alternate;
+}
+.aurora-bg .orb-1 { width: 60vw; height: 60vw; background: var(--mesh-1); top: -20%; left: -10%; }
+.aurora-bg .orb-2 { width: 50vw; height: 50vw; background: var(--mesh-2); bottom: -10%; right: -10%; animation-delay: -5s; }
+.aurora-bg .orb-3 { width: 40vw; height: 40vw; background: var(--mesh-3); top: 40%; left: 50%; transform: translate(-50%, -50%); animation-duration: 15s; }
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(5%, 10%) scale(1.1); }
 }
 
 .theme-switch-wrapper {
@@ -108,8 +143,12 @@ input:checked+.slider:before {
     max-width: 90%;
     height: 600px;
     overflow: hidden;
-    border-radius: 20px;
-    box-shadow: var(--shadow);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    border-radius: 32px;
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
 }
 
 .slider-wrapper {
@@ -122,19 +161,17 @@ input:checked+.slider:before {
 .slide {
     width: 50%;
     height: 100%;
-    display:
-        flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background:
-        var(--card-bg);
+    background: transparent;
 }
 
 .form-card {
     width: 100%;
-    max-width: 400px;
-    padding: 40px 30px;
+    max-width: 450px;
+    padding: 50px 40px;
     text-align: center;
 }
 
@@ -174,8 +211,7 @@ input:checked+.slider:before {
 .input-box input {
     width: 100%;
     padding: 15px 15px 15px 50px;
-    background:
-        var(--bg-color);
+    background: var(--glass-bg);
     border: 2px solid var(--border-color);
     border-radius: 8px;
     color:
@@ -214,14 +250,29 @@ input:checked+.slider:before {
 }
 
 .btn-primary {
+    position: relative;
     background: var(--primary-gradient);
-    color: white;
+    color: white !important;
+    border-radius: 100px;
+    z-index: 1;
+}
+.btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    background: var(--primary-gradient);
+    border-radius: 100px;
+    filter: blur(15px);
+    opacity: 0.5;
+    z-index: -1;
+    transition: opacity 0.3s ease;
 }
 
 .btn-primary:hover {
-    background: var(--primary-gradient);
-    box-shadow: 0 5px 20px rgba(var(--primary-rgb), 0.4);
     transform: translateY(-2px);
+}
+.btn-primary:hover::before {
+    opacity: 0.8;
 }
 
 .btn-primary:active {

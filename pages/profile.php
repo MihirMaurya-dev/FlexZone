@@ -27,7 +27,7 @@ include '../includes/header.php';
             <a href="#badges"><i class='bx bx-medal'></i> Badges</a>
             <a href="#equipment"><i class='bx bx-dumbbell'></i> My Garage</a>
             <a href="#settings"><i class='bx bx-cog'></i> Settings</a>
-            <a href="#" onclick="exportData()" title="Export Data"><i class='bx bx-download'></i></a>
+            <a href="javascript:void(0)" onclick="exportData(); return false;" title="Export Data"><i class='bx bx-download'></i> Export Data</a>
             <a href="../help.html"><i class='bx bx-help-circle'></i> Help Center</a>
             <a href="../credits.html"><i class='bx bx-info-circle'></i> Credits</a>
         </nav>

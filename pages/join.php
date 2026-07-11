@@ -18,6 +18,7 @@ include '../includes/header.php';
     <span>Dark Mode</span>
 </div>
 
+
 <div class="slider-container">
     <div class="slider-wrapper" id="sliderWrapper">
         <!-- Slide 1: Login Form -->

@@ -5,7 +5,8 @@ requireLogin();
 include '../includes/header.php';
 ?>
 
-<main class="dashboard">
+
+<main class="dashboard" style="position: relative; z-index: 1;">
     <div class="welcome-message">
         <h1>Ready to sweat, <span id="username">User</span>?</h1>
         <p id="greeting-container">Loading...</p>

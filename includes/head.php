@@ -50,8 +50,6 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'FlexZone';
         <link rel="stylesheet" href="<?php echo $basePath; ?>css/join.css">
     <?php elseif ($activePage === 'onboarding'): ?>
         <link rel="stylesheet" href="<?php echo $basePath; ?>css/onboarding.css">
-    <?php elseif ($activePage === 'index'): ?>
-        <link rel="stylesheet" href="<?php echo $basePath; ?>css/landing.css">
     <?php endif; ?>
 
     <?php if (in_array($activePage, ['dashboard', 'progress'])): ?>
@@ -62,3 +60,10 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'FlexZone';
     <?php if (isset($extraScript)) echo '<script src="' . $extraScript . '" defer></script>'; ?>
 </head>
 <body class="<?php echo isset($bodyClass) ? $bodyClass : ''; ?>">
+
+<!-- Global Aurora Background -->
+<div class="aurora-bg" style="position: fixed; z-index: -1;">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
