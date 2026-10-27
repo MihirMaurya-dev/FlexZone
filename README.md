@@ -19,6 +19,21 @@
 
 ---
 
+
+## 🧰 Technology Stack & Tooling
+
+<div align="center">
+
+<a href="https://skillicons.dev">
+  <img src="https://skillicons.dev/icons?i=php,mysql,js,html,css,cloudflare,git,vscode&theme=dark&perline=8" alt="Technology Stack" />
+</a>
+
+</div>
+
+<br/>
+
+---
+
 ## Track. Train. Transform.
 
 ![Views](https://komarev.com/ghpvc/?username=MihirMaurya-dev-FlexZone&label=Views&color=777bb4&style=flat)
