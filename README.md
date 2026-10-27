@@ -1,7 +1,25 @@
 <div align="center">
 
-# 🏋️‍♂️ FlexZone
-### Track. Train. Transform.
+# 🏋️ FlexZone
+### High-Performance Fitness Ecosystem & Custom RESTful API Engine
+
+[![Views](https://komarev.com/ghpvc/?username=MihirMaurya-dev-FlexZone&label=Views&color=777bb4&style=flat-square)](https://github.com/MihirMaurya-dev/FlexZone)
+[![PHP Version](https://img.shields.io/badge/PHP-%5E8.0-777bb4.svg?style=flat-square&logo=php)](https://www.php.net/)
+[![JS Standard](https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e.svg?style=flat-square&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Cloudflare](https://img.shields.io/badge/Edge_Security-Cloudflare-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://cloudflare.com)
+[![Deployment](https://img.shields.io/badge/Infrastructure-Azure_VM_IaC-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com)
+
+> **Architected by [Mihir Maurya](https://github.com/MihirMaurya-dev) · Enterprise Cloud Architect & DevSecOps**  
+> [![Portfolio](https://img.shields.io/badge/Portfolio-mihirmaurya--dev.github.io-7B2CBF?style=flat-square&logo=googlechrome&logoColor=white)](https://mihirmaurya-dev.github.io/)
+> [![Live Project](https://img.shields.io/badge/Live_Project-b18g119.online-00FF66?style=flat-square&logo=cloudflare&logoColor=0B0813)](https://b18g119.online)
+> [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/mihirmauryaa1)
+
+</div>
+
+---
+
+## Track. Train. Transform.
 
 ![Views](https://komarev.com/ghpvc/?username=MihirMaurya-dev-FlexZone&label=Views&color=777bb4&style=flat)
 [![PHP Version](https://img.shields.io/badge/PHP-%5E8.0-777bb4.svg?style=flat&logo=php)](https://www.php.net/)
